@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
 import { Icon } from '@iconify/react';
@@ -16,10 +16,23 @@ import {
   FormControlLabel
 } from '@material-ui/core';
 import { LoadingButton } from '@material-ui/lab';
+import { Lock, Mail } from '@material-ui/icons';
 
 // ----------------------------------------------------------------------
 
 export default function LoginForm() {
+  // Quotes
+  const [quote, setQuote] = useState('');
+  const [author, setAuthor] = useState('');
+  useEffect(() => {
+    fetch('http://quotes.rest/qod.json?category=inspire')
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setQuote(data.contents.quotes[0].quote);
+        setAuthor(data.contents.quotes[0].author);
+      });
+  }, []);
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
@@ -55,6 +68,13 @@ export default function LoginForm() {
             autoComplete="username"
             type="email"
             label="Email address"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Mail />
+                </InputAdornment>
+              )
+            }}
             {...getFieldProps('email')}
             error={Boolean(touched.email && errors.email)}
             helperText={touched.email && errors.email}
@@ -67,6 +87,11 @@ export default function LoginForm() {
             label="Password"
             {...getFieldProps('password')}
             InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Lock />
+                </InputAdornment>
+              ),
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton onClick={handleShowPassword} edge="end">
