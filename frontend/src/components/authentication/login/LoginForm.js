@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
 import { Icon } from '@iconify/react';
@@ -21,23 +21,11 @@ import { Lock, Mail } from '@material-ui/icons';
 // ----------------------------------------------------------------------
 
 export default function LoginForm() {
-  // Quotes
-  const [quote, setQuote] = useState('');
-  const [author, setAuthor] = useState('');
-  useEffect(() => {
-    fetch('http://quotes.rest/qod.json?category=inspire')
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        setQuote(data.contents.quotes[0].quote);
-        setAuthor(data.contents.quotes[0].author);
-      });
-  }, []);
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
   const LoginSchema = Yup.object().shape({
-    email: Yup.string().email('Email must be a valid email address').required('Email is required'),
+    email: Yup.string().required('Username is required'),
     password: Yup.string().required('Password is required')
   });
 
@@ -67,7 +55,7 @@ export default function LoginForm() {
             fullWidth
             autoComplete="username"
             type="email"
-            label="Email address"
+            label="Username"
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
