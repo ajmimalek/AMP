@@ -95,10 +95,16 @@ export default function Login() {
                 />
                 <Box sx={{ minWidth: 240 }}>
                   <Typography variant="subtitle2" noWrap>
-                    {author}
+                    Quote of the Day
                   </Typography>
                   <Typography variant="body2" sx={{ color: 'text.secondary' }} Wrap>
                     {quote}
+                  </Typography>
+                  <Typography
+                    variant="caption"
+                    sx={{ color: 'text.secondary', float: 'right', marginRight: '10px' }}
+                  >
+                    {author}
                   </Typography>
                 </Box>
               </Stack>
