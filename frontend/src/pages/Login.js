@@ -8,7 +8,6 @@ import AuthLayout from '../layouts/AuthLayout';
 import Page from '../components/Page';
 import { MHidden } from '../components/@material-extend';
 import { LoginForm } from '../components/authentication/login';
-import AuthSocial from '../components/authentication/AuthSocial';
 
 // ----------------------------------------------------------------------
 
@@ -78,9 +77,10 @@ export default function Login() {
         <ContentStyle>
           <Stack sx={{ mb: 1 }}>
             <Typography variant="h4">Sign in</Typography>
-            <Typography sx={{ color: 'text.secondary' }}>Enter your details below.</Typography>
+            <Typography sx={{ color: 'text.secondary', marginBottom: '20px' }}>
+              Enter your details below.
+            </Typography>
           </Stack>
-          <AuthSocial />
 
           <LoginForm />
 

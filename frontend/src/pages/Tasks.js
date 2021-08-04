@@ -1,16 +1,12 @@
 import { filter } from 'lodash';
-import { Icon } from '@iconify/react';
 import { sentenceCase } from 'change-case';
 import { useState } from 'react';
-import plusFill from '@iconify/icons-eva/plus-fill';
-import { Link as RouterLink } from 'react-router-dom'; // material
 
 import {
   Card,
   Table,
   Stack,
   Avatar,
-  Button,
   Checkbox,
   TableRow,
   TableBody,
@@ -21,11 +17,15 @@ import {
   TablePagination
 } from '@material-ui/core'; // components
 
+import CartWidget from 'src/components/_dashboard/tasks/TasksCartWidget';
+import { useFormik } from 'formik';
+import TasksFilterSidebar from 'src/components/_dashboard/tasks/TasksFilterSidebar';
+import TasksSort from 'src/components/_dashboard/tasks/TasksSort';
 import Page from '../components/Page';
 import Label from '../components/Label';
 import Scrollbar from '../components/Scrollbar';
 import SearchNotFound from '../components/SearchNotFound';
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../components/_dashboard/user'; //
+import { UserListHead, UserListToolbar, UserMoreMenu } from '../components/_dashboard/tasks'; //
 
 import USERLIST from '../_mocks_/user'; // ----------------------------------------------------------------------
 
@@ -94,6 +94,31 @@ function applySortFilter(array, comparator, query) {
 }
 
 function Tasks() {
+  const [openFilter, setOpenFilter] = useState(false);
+  const formik = useFormik({
+    initialValues: {
+      selectedDate: '',
+      priceRange: '',
+      rating: ''
+    },
+    onSubmit: () => {
+      setOpenFilter(false);
+    }
+  });
+  const { resetForm, handleSubmit } = formik;
+
+  const handleOpenFilter = () => {
+    setOpenFilter(true);
+  };
+
+  const handleCloseFilter = () => {
+    setOpenFilter(false);
+  };
+
+  const handleResetFilter = () => {
+    handleSubmit();
+    resetForm();
+  };
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
@@ -158,16 +183,36 @@ function Tasks() {
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            User
+            Tasks
           </Typography>
-          <Button
-            variant="contained"
-            component={RouterLink}
-            to="#"
-            startIcon={<Icon icon={plusFill} />}
+        </Stack>
+
+        <Stack
+          direction="row"
+          flexWrap="wrap-reverse"
+          alignItems="center"
+          justifyContent="flex-end"
+          sx={{
+            mb: 5
+          }}
+        >
+          <Stack
+            direction="row"
+            spacing={1}
+            flexShrink={0}
+            sx={{
+              my: 1
+            }}
           >
-            New User
-          </Button>
+            <TasksFilterSidebar
+              formik={formik}
+              isOpenFilter={openFilter}
+              onResetFilter={handleResetFilter}
+              onOpenFilter={handleOpenFilter}
+              onCloseFilter={handleCloseFilter}
+            />
+            <TasksSort />
+          </Stack>
         </Stack>
 
         <Card>
@@ -279,6 +324,7 @@ function Tasks() {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Card>
+        <CartWidget />
       </Container>
     </Page>
   );

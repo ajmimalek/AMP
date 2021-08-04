@@ -1,9 +1,7 @@
-import PropTypes from 'prop-types';
-// material
-import { visuallyHidden } from '@material-ui/utils';
-import { Box, Checkbox, TableRow, TableCell, TableHead, TableSortLabel } from '@material-ui/core';
+import PropTypes from 'prop-types'; // material
 
-// ----------------------------------------------------------------------
+import { visuallyHidden } from '@material-ui/utils';
+import { Box, Checkbox, TableRow, TableCell, TableHead, TableSortLabel } from '@material-ui/core'; // ----------------------------------------------------------------------
 
 UserListHead.propTypes = {
   order: PropTypes.oneOf(['asc', 'desc']),
@@ -15,7 +13,7 @@ UserListHead.propTypes = {
   onSelectAllClick: PropTypes.func
 };
 
-export default function UserListHead({
+function UserListHead({
   order,
   orderBy,
   rowCount,
@@ -63,3 +61,5 @@ export default function UserListHead({
     </TableHead>
   );
 }
+
+export { UserListHead as default };

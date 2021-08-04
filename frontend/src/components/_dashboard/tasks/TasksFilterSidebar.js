@@ -5,6 +5,7 @@ import closeFill from '@iconify/icons-eva/close-fill';
 import roundClearAll from '@iconify/icons-ic/round-clear-all';
 import roundFilterList from '@iconify/icons-ic/round-filter-list';
 // material
+import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
 import {
   Box,
   Radio,
@@ -13,44 +14,59 @@ import {
   Drawer,
   Rating,
   Divider,
-  Checkbox,
-  FormGroup,
   IconButton,
   Typography,
   RadioGroup,
-  FormControlLabel
-} from '@material-ui/core';
-//
+  FormControlLabel,
+  TextField
+} from '@material-ui/core'; //
+
+import { Timelapse } from '@material-ui/icons';
+import { DateRangePicker, LocalizationProvider } from '@material-ui/lab';
 import Scrollbar from '../../Scrollbar';
 
-// ----------------------------------------------------------------------
-
 export const SORT_BY_OPTIONS = [
-  { value: 'featured', label: 'Featured' },
-  { value: 'newest', label: 'Newest' },
-  { value: 'priceDesc', label: 'Price: High-Low' },
-  { value: 'priceAsc', label: 'Price: Low-High' }
+  {
+    value: 'featured',
+    label: 'Featured'
+  },
+  {
+    value: 'newest',
+    label: 'Newest'
+  },
+  {
+    value: 'priceDesc',
+    label: 'Price: High-Low'
+  },
+  {
+    value: 'priceAsc',
+    label: 'Price: Low-High'
+  }
 ];
-export const FILTER_GENDER_OPTIONS = ['Men', 'Women', 'Kids'];
-export const FILTER_CATEGORY_OPTIONS = ['All', 'Shose', 'Apparel', 'Accessories'];
 export const FILTER_RATING_OPTIONS = ['up4Star', 'up3Star', 'up2Star', 'up1Star'];
 export const FILTER_PRICE_OPTIONS = [
-  { value: 'below', label: 'Below $25' },
-  { value: 'between', label: 'Between $25 - $75' },
-  { value: 'above', label: 'Above $75' }
+  {
+    value: 'below',
+    label: 'Below $25'
+  },
+  {
+    value: 'between',
+    label: 'Between $25 - $75'
+  },
+  {
+    value: 'above',
+    label: 'Above $75'
+  }
 ];
 
-// ----------------------------------------------------------------------
-
-ShopFilterSidebar.propTypes = {
+TasksFilterSidebar.propTypes = {
   isOpenFilter: PropTypes.bool,
   onResetFilter: PropTypes.func,
   onOpenFilter: PropTypes.func,
   onCloseFilter: PropTypes.func,
   formik: PropTypes.object
 };
-
-export default function ShopFilterSidebar({
+export default function TasksFilterSidebar({
   isOpenFilter,
   onResetFilter,
   onOpenFilter,
@@ -58,7 +74,6 @@ export default function ShopFilterSidebar({
   formik
 }) {
   const { values, getFieldProps, handleChange } = formik;
-
   return (
     <>
       <Button
@@ -77,16 +92,28 @@ export default function ShopFilterSidebar({
             open={isOpenFilter}
             onClose={onCloseFilter}
             PaperProps={{
-              sx: { width: 280, border: 'none', overflow: 'hidden' }
+              sx: {
+                width: 280,
+                border: 'none',
+                overflow: 'hidden'
+              }
             }}
           >
             <Stack
               direction="row"
               alignItems="center"
               justifyContent="space-between"
-              sx={{ px: 1, py: 2 }}
+              sx={{
+                px: 1,
+                py: 2
+              }}
             >
-              <Typography variant="subtitle1" sx={{ ml: 1 }}>
+              <Typography
+                variant="subtitle1"
+                sx={{
+                  ml: 1
+                }}
+              >
                 Filters
               </Typography>
               <IconButton onClick={onCloseFilter}>
@@ -97,43 +124,31 @@ export default function ShopFilterSidebar({
             <Divider />
 
             <Scrollbar>
-              <Stack spacing={3} sx={{ p: 3 }}>
+              <Stack
+                spacing={3}
+                sx={{
+                  p: 3
+                }}
+              >
                 <div>
                   <Typography variant="subtitle1" gutterBottom>
-                    Gender
+                    <Timelapse sx={{ marginBottom: '-4px' }} /> Period
                   </Typography>
-                  <FormGroup>
-                    {FILTER_GENDER_OPTIONS.map((item) => (
-                      <FormControlLabel
-                        key={item}
-                        control={
-                          <Checkbox
-                            {...getFieldProps('gender')}
-                            value={item}
-                            checked={values.gender.includes(item)}
-                          />
-                        }
-                        label={item}
-                      />
-                    ))}
-                  </FormGroup>
-                </div>
-
-                <div>
-                  <Typography variant="subtitle1" gutterBottom>
-                    Category
-                  </Typography>
-                  <RadioGroup {...getFieldProps('category')}>
-                    {FILTER_CATEGORY_OPTIONS.map((item) => (
-                      <FormControlLabel key={item} value={item} control={<Radio />} label={item} />
-                    ))}
-                  </RadioGroup>
-                </div>
-
-                <div>
-                  <Typography variant="subtitle1" gutterBottom>
-                    Colour
-                  </Typography>
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DateRangePicker
+                      startText="Check-in"
+                      endText="Check-out"
+                      value={formik.values.selectedDate}
+                      onChange={handleChange}
+                      renderInput={(startProps, endProps) => (
+                        <>
+                          <TextField {...startProps} />
+                          <Box sx={{ mx: 2 }}> to </Box>
+                          <TextField {...endProps} />
+                        </>
+                      )}
+                    />
+                  </LocalizationProvider>
                 </div>
 
                 <div>
@@ -173,10 +188,14 @@ export default function ShopFilterSidebar({
                         sx={{
                           my: 0.5,
                           borderRadius: 1,
-                          '& > :first-of-type': { py: 0.5 },
+                          '& > :first-of-type': {
+                            py: 0.5
+                          },
                           '&:hover': {
                             opacity: 0.48,
-                            '& > *': { bgcolor: 'transparent' }
+                            '& > *': {
+                              bgcolor: 'transparent'
+                            }
                           },
                           ...(values.rating.includes(item) && {
                             bgcolor: 'background.neutral'
@@ -189,7 +208,11 @@ export default function ShopFilterSidebar({
               </Stack>
             </Scrollbar>
 
-            <Box sx={{ p: 3 }}>
+            <Box
+              sx={{
+                p: 3
+              }}
+            >
               <Button
                 fullWidth
                 size="large"
