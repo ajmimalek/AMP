@@ -97,7 +97,7 @@ export default function Login() {
                   <Typography variant="subtitle2" noWrap>
                     Quote of the Day
                   </Typography>
-                  <Typography variant="body2" sx={{ color: 'text.secondary' }} Wrap>
+                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                     {quote}
                   </Typography>
                   <Typography

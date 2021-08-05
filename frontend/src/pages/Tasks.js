@@ -97,8 +97,8 @@ function Tasks() {
   const [openFilter, setOpenFilter] = useState(false);
   const formik = useFormik({
     initialValues: {
-      selectedDate: '',
-      priceRange: '',
+      selectedDate: [null, null],
+      story: '',
       rating: ''
     },
     onSubmit: () => {

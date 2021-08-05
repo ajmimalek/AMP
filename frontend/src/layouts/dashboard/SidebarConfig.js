@@ -1,7 +1,6 @@
-import { Apps, ChromeReaderMode, Dashboard } from '@material-ui/icons';
+import { Dashboard } from '@material-ui/icons';
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 // ----------------------------------------------------------------------
-
 const sidebarConfig = [
   {
     title: 'dashboard',
@@ -9,14 +8,9 @@ const sidebarConfig = [
     icon: <Dashboard />
   },
   {
-    title: 'projects',
-    path: '/dashboard/projects',
-    icon: <Apps />
-  },
-  {
-    title: 'board',
-    path: '/dashboard/board',
-    icon: <ChromeReaderMode />
+    title: 'sprints',
+    path: '/dashboard/sprints',
+    icon: <img src="/static/icons/Agile.svg" alt="Sprint" />
   },
   {
     title: 'tasks',

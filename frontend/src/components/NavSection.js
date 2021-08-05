@@ -156,7 +156,6 @@ NavSection.propTypes = {
 export default function NavSection({ navConfig, ...other }) {
   const { pathname } = useLocation();
   const match = (path) => (path ? !!matchPath({ path, end: false }, pathname) : false);
-
   return (
     <Box {...other}>
       <List disablePadding>

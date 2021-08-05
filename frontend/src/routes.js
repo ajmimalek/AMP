@@ -5,7 +5,7 @@ import LogoOnlyLayout from './layouts/LogoOnlyLayout';
 //
 import Login from './pages/Login';
 import DashboardApp from './pages/DashboardApp';
-import Board from './pages/Board';
+import Sprints from './pages/Sprints';
 import Projects from './pages/Projects';
 import Tasks from './pages/Tasks';
 import NotFound from './pages/Page404';
@@ -22,7 +22,7 @@ export default function Router() {
         { path: '/', element: <Navigate to="/dashboard/app" replace /> },
         { path: 'app', element: <DashboardApp /> },
         { path: 'tasks', element: <Tasks /> },
-        { path: 'board', element: <Board /> },
+        { path: 'sprints', element: <Sprints /> },
         { path: 'projects', element: <Projects /> },
         { path: 'profile', element: <Profile /> }
       ]

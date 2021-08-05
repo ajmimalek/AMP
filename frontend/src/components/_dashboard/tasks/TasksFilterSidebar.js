@@ -8,22 +8,18 @@ import roundFilterList from '@iconify/icons-ic/round-filter-list';
 import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
 import {
   Box,
-  Radio,
   Stack,
   Button,
   Drawer,
-  Rating,
   Divider,
   IconButton,
   Typography,
-  RadioGroup,
-  FormControlLabel,
-  TextField
+  TextField,
+  Autocomplete
 } from '@material-ui/core'; //
 
-import { Timelapse } from '@material-ui/icons';
-import { DateRangePicker, LocalizationProvider } from '@material-ui/lab';
-import Scrollbar from '../../Scrollbar';
+import { Bookmark, Face, Timelapse } from '@material-ui/icons';
+import { LocalizationProvider, MobileDateRangePicker } from '@material-ui/lab';
 
 export const SORT_BY_OPTIONS = [
   {
@@ -43,8 +39,7 @@ export const SORT_BY_OPTIONS = [
     label: 'Price: Low-High'
   }
 ];
-export const FILTER_RATING_OPTIONS = ['up4Star', 'up3Star', 'up2Star', 'up1Star'];
-export const FILTER_PRICE_OPTIONS = [
+export const FILTER_STORY_OPTIONS = [
   {
     value: 'below',
     label: 'Below $25'
@@ -73,7 +68,7 @@ export default function TasksFilterSidebar({
   onCloseFilter,
   formik
 }) {
-  const { values, getFieldProps, handleChange } = formik;
+  const { handleChange } = formik;
   return (
     <>
       <Button
@@ -123,108 +118,77 @@ export default function TasksFilterSidebar({
 
             <Divider />
 
-            <Scrollbar>
-              <Stack
-                spacing={3}
-                sx={{
-                  p: 3
-                }}
-              >
-                <div>
-                  <Typography variant="subtitle1" gutterBottom>
-                    <Timelapse sx={{ marginBottom: '-4px' }} /> Period
-                  </Typography>
-                  <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <DateRangePicker
-                      startText="Check-in"
-                      endText="Check-out"
-                      value={formik.values.selectedDate}
-                      onChange={handleChange}
-                      renderInput={(startProps, endProps) => (
-                        <>
-                          <TextField {...startProps} />
-                          <Box sx={{ mx: 2 }}> to </Box>
-                          <TextField {...endProps} />
-                        </>
-                      )}
-                    />
-                  </LocalizationProvider>
-                </div>
-
-                <div>
-                  <Typography variant="subtitle1" gutterBottom>
-                    Price
-                  </Typography>
-                  <RadioGroup {...getFieldProps('priceRange')}>
-                    {FILTER_PRICE_OPTIONS.map((item) => (
-                      <FormControlLabel
-                        key={item.value}
-                        value={item.value}
-                        control={<Radio />}
-                        label={item.label}
-                      />
-                    ))}
-                  </RadioGroup>
-                </div>
-
-                <div>
-                  <Typography variant="subtitle1" gutterBottom>
-                    Rating
-                  </Typography>
-                  <RadioGroup {...getFieldProps('rating')}>
-                    {FILTER_RATING_OPTIONS.map((item, index) => (
-                      <FormControlLabel
-                        key={item}
-                        value={item}
-                        control={
-                          <Radio
-                            disableRipple
-                            color="default"
-                            icon={<Rating readOnly value={4 - index} />}
-                            checkedIcon={<Rating readOnly value={4 - index} />}
-                          />
-                        }
-                        label="& Up"
-                        sx={{
-                          my: 0.5,
-                          borderRadius: 1,
-                          '& > :first-of-type': {
-                            py: 0.5
-                          },
-                          '&:hover': {
-                            opacity: 0.48,
-                            '& > *': {
-                              bgcolor: 'transparent'
-                            }
-                          },
-                          ...(values.rating.includes(item) && {
-                            bgcolor: 'background.neutral'
-                          })
-                        }}
-                      />
-                    ))}
-                  </RadioGroup>
-                </div>
-              </Stack>
-            </Scrollbar>
-
-            <Box
+            <Stack
+              spacing={19}
               sx={{
                 p: 3
               }}
             >
-              <Button
-                fullWidth
-                size="large"
-                type="submit"
-                color="inherit"
-                variant="outlined"
-                onClick={onResetFilter}
-                startIcon={<Icon icon={roundClearAll} />}
+              <div>
+                <Typography variant="subtitle1" gutterBottom sx={{ textAlign: 'center' }}>
+                  <Timelapse sx={{ marginBottom: '-4px' }} /> Period
+                </Typography>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <MobileDateRangePicker
+                    showTodayButton
+                    startText="Start Date"
+                    endText="End Date"
+                    value={formik.values.selectedDate}
+                    onChange={handleChange('selectedDate')}
+                    renderInput={(startProps, endProps) => (
+                      <>
+                        <TextField {...startProps} />
+                        <Box sx={{ mx: 1 }}> </Box>
+                        <TextField {...endProps} />
+                      </>
+                    )}
+                  />
+                </LocalizationProvider>
+              </div>
+
+              <div>
+                <Typography variant="subtitle1" gutterBottom sx={{ textAlign: 'center' }}>
+                  <Bookmark sx={{ marginBottom: '-4px' }} /> Story
+                </Typography>
+                <Autocomplete
+                  disablePortal
+                  id="combo-box-stories"
+                  options={FILTER_STORY_OPTIONS}
+                  sx={{ width: '100%' }}
+                  renderInput={(params) => <TextField {...params} label="Choose your story..." />}
+                />
+              </div>
+
+              <div>
+                <Typography variant="subtitle1" gutterBottom sx={{ textAlign: 'center' }}>
+                  <Face sx={{ marginBottom: '-4px' }} /> Developper
+                </Typography>
+                <Autocomplete
+                  disablePortal
+                  id="combo-box-stories"
+                  options={FILTER_STORY_OPTIONS}
+                  sx={{ width: '100%' }}
+                  renderInput={(params) => <TextField {...params} label="Choose your story..." />}
+                />
+              </div>
+              <Box
+                sx={{
+                  p: 3
+                }}
               >
-                Clear All
-              </Button>
-            </Box>
+                <Button
+                  fullWidth
+                  size="large"
+                  type="submit"
+                  color="inherit"
+                  variant="outlined"
+                  onClick={onResetFilter}
+                  startIcon={<Icon icon={roundClearAll} />}
+                >
+                  Clear All
+                </Button>
+              </Box>
+            </Stack>
           </Drawer>
         </Form>
       </FormikProvider>
