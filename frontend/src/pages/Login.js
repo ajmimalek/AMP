@@ -51,7 +51,7 @@ export default function Login() {
   const [author, setAuthor] = useState('');
   const [image, setImage] = useState('');
   useEffect(() => {
-    fetch('http://quotes.rest/qod.json?category=inspire')
+    fetch('https://quotes.rest/qod.json?category=inspire')
       .then((res) => res.json())
       .then((data) => {
         console.log(data);

@@ -15,12 +15,20 @@ import {
   IconButton,
   Typography,
   TextField,
-  Autocomplete
+  Autocomplete,
+  Avatar
 } from '@material-ui/core'; //
 
 import { Bookmark, Face, Timelapse } from '@material-ui/icons';
 import { LocalizationProvider, MobileDateRangePicker } from '@material-ui/lab';
+import users from 'src/_mocks_/user';
+import { styled } from '@material-ui/styles';
 
+const AccountStyle = styled('div')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  padding: theme.spacing(0.25)
+}));
 export const SORT_BY_OPTIONS = [
   {
     value: 'featured',
@@ -166,9 +174,23 @@ export default function TasksFilterSidebar({
                 <Autocomplete
                   disablePortal
                   id="combo-box-stories"
-                  options={FILTER_STORY_OPTIONS}
+                  options={users}
+                  getOptionLabel={(option) => option.name}
                   sx={{ width: '100%' }}
                   renderInput={(params) => <TextField {...params} label="Choose your story..." />}
+                  renderOption={(props, option) => (
+                    <AccountStyle {...props}>
+                      <Avatar src={option.avatarUrl} alt="photoURL" />
+                      <Box sx={{ ml: 1 }}>
+                        <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
+                          {option.name}
+                        </Typography>
+                        <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                          {option.mail}
+                        </Typography>
+                      </Box>
+                    </AccountStyle>
+                  )}
                 />
               </div>
               <Box

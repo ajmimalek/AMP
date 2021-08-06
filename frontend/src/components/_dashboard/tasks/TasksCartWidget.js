@@ -30,7 +30,7 @@ const RootStyle = styled('div')(({ theme }) => ({
 
 export default function CartWidget() {
   return (
-    <Tooltip title="ToDo Tasks">
+    <Tooltip title="ToDo Tasks" arrow>
       <RootStyle>
         <Badge showZero badgeContent={0} color="error" max={99}>
           <AssignmentLate />

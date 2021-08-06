@@ -1,36 +1,35 @@
 import PropTypes from 'prop-types';
-import { Link as RouterLink } from 'react-router-dom';
-// material
+import { Link as RouterLink } from 'react-router-dom'; // material
+
 import { Box, Card, Link, Typography, Stack } from '@material-ui/core';
-import { styled } from '@material-ui/core/styles';
-// utils
-import { fCurrency } from '../../../utils/formatNumber';
-//
+import { styled } from '@material-ui/core/styles'; // utils
+
+import { fCurrency } from '../../../utils/formatNumber'; //
+
 import Label from '../../Label';
-import ColorPreview from '../../ColorPreview';
+import ColorPreview from '../../ColorPreview'; // ----------------------------------------------------------------------
 
-// ----------------------------------------------------------------------
-
-const ProductImgStyle = styled('img')({
+const StoryImgStyle = styled('img')({
   top: 0,
   width: '100%',
   height: '100%',
   objectFit: 'cover',
   position: 'absolute'
-});
+}); // ----------------------------------------------------------------------
 
-// ----------------------------------------------------------------------
-
-ShopProductCard.propTypes = {
-  product: PropTypes.object
+StoryCard.propTypes = {
+  story: PropTypes.object
 };
-
-export default function ShopProductCard({ product }) {
-  const { name, cover, price, colors, status, priceSale } = product;
-
+export default function StoryCard({ story }) {
+  const { name, cover, price, colors, status, priceSale } = story;
   return (
     <Card>
-      <Box sx={{ pt: '100%', position: 'relative' }}>
+      <Box
+        sx={{
+          pt: '100%',
+          position: 'relative'
+        }}
+      >
         {status && (
           <Label
             variant="filled"
@@ -46,10 +45,15 @@ export default function ShopProductCard({ product }) {
             {status}
           </Label>
         )}
-        <ProductImgStyle alt={name} src={cover} />
+        <StoryImgStyle alt={name} src={cover} />
       </Box>
 
-      <Stack spacing={2} sx={{ p: 3 }}>
+      <Stack
+        spacing={2}
+        sx={{
+          p: 3
+        }}
+      >
         <Link to="#" color="inherit" underline="hover" component={RouterLink}>
           <Typography variant="subtitle2" noWrap>
             {name}
