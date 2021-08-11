@@ -20,5 +20,10 @@ namespace AMP.Data
             //We must Hash the password with Bcrypt...
             return _context.Users.FirstOrDefault(u => u.Email.Equals(email));
         }
+
+        public User GetUserById(Guid id)
+        {
+            return _context.Users.FirstOrDefault(u => u.Id.Equals(id));
+        }
     }
 }

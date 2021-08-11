@@ -9,6 +9,6 @@ namespace AMP.Data
     public interface IUserRepository
     {
         User GetUserByEmail(string email);
-
+        User GetUserById(Guid id);
     }
 }
