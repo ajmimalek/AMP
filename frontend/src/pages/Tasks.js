@@ -179,7 +179,7 @@ function Tasks() {
   const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
   const isUserNotFound = filteredUsers.length === 0;
   return (
-    <Page title="Tasks List | Minimal-UI">
+    <Page title="Tasks List | Linedata-AMP">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>

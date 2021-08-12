@@ -39,7 +39,6 @@
     "@iconify/icons-ant-design": "^1.1.0",
     "@iconify/icons-eva": "^1.1.0",
     "@iconify/icons-ic": "^1.1.7",
-    "@iconify/react": "^1.1.4",
     "@material-ui/core": "^5.0.0-beta.1",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^5.0.0-alpha.40",
@@ -71,6 +70,8 @@
   "devDependencies": {
     "@babel/core": "^7.14.8",
     "@babel/eslint-parser": "^7.14.7",
+    "@iconify/icons-simple-icons": "^1.1.37",
+    "@iconify/react": "^1.1.4",
     "eslint": "^7.31.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-prettier": "^8.3.0",

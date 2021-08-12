@@ -6,7 +6,6 @@ import LogoOnlyLayout from './layouts/LogoOnlyLayout';
 import Login from './pages/Login';
 import DashboardApp from './pages/DashboardApp';
 import Sprints from './pages/Sprints';
-import Projects from './pages/Projects';
 import Tasks from './pages/Tasks';
 import NotFound from './pages/Page404';
 import Profile from './pages/Profile';
@@ -23,7 +22,6 @@ export default function Router() {
         { path: 'app', element: <DashboardApp /> },
         { path: 'tasks', element: <Tasks /> },
         { path: 'sprints', element: <Sprints /> },
-        { path: 'projects', element: <Projects /> },
         { path: 'profile', element: <Profile /> }
       ]
     },

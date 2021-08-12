@@ -29,6 +29,11 @@ const AccountStyle = styled('div')(({ theme }) => ({
   alignItems: 'center',
   padding: theme.spacing(0.25)
 }));
+
+const StoriesStyle = styled('div')(({ theme }) => ({
+  [theme.breakpoints.down('lg')]: {}
+}));
+
 export const SORT_BY_OPTIONS = [
   {
     value: 'featured',
@@ -97,8 +102,9 @@ export default function TasksFilterSidebar({
             PaperProps={{
               sx: {
                 width: 280,
+                height: '100%',
                 border: 'none',
-                overflow: 'hidden'
+                overflow: 'scroll'
               }
             }}
           >
@@ -154,7 +160,7 @@ export default function TasksFilterSidebar({
                 </LocalizationProvider>
               </div>
 
-              <div>
+              <StoriesStyle>
                 <Typography variant="subtitle1" gutterBottom sx={{ textAlign: 'center' }}>
                   <Bookmark sx={{ marginBottom: '-4px' }} /> Story
                 </Typography>
@@ -165,7 +171,7 @@ export default function TasksFilterSidebar({
                   sx={{ width: '100%' }}
                   renderInput={(params) => <TextField {...params} label="Choose your story..." />}
                 />
-              </div>
+              </StoriesStyle>
 
               <div>
                 <Typography variant="subtitle1" gutterBottom sx={{ textAlign: 'center' }}>
