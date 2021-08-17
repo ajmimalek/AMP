@@ -144,11 +144,17 @@ export default function TasksFilterSidebar({
                 </Typography>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <MobileDateRangePicker
-                    showTodayButton
+                    showTodayButton // t5Arrerg f erreur
                     startText="Start Date"
                     endText="End Date"
                     value={formik.values.selectedDate}
-                    onChange={handleChange('selectedDate')}
+                    onChange={(selectedDate) => {
+                      selectedDate.forEach((element, index) => {
+                        console.log(element);
+                        console.log(index);
+                        formik.setFieldValue(`selectedDate[${index}]`, element);
+                      });
+                    }}
                     renderInput={(startProps, endProps) => (
                       <>
                         <TextField {...startProps} />
@@ -170,6 +176,16 @@ export default function TasksFilterSidebar({
                   options={FILTER_STORY_OPTIONS}
                   sx={{ width: '100%' }}
                   renderInput={(params) => <TextField {...params} label="Choose your story..." />}
+                  renderOption={(props, option) => (
+                    <AccountStyle {...props}>
+                      <Avatar src={option.avatarUrl} alt="photoURL" />
+                      <Box sx={{ ml: 1 }}>
+                        <Typography variant="body2" sx={{ color: 'text.primary' }}>
+                          {option.label}
+                        </Typography>
+                      </Box>
+                    </AccountStyle>
+                  )}
                 />
               </StoriesStyle>
 
@@ -179,7 +195,7 @@ export default function TasksFilterSidebar({
                 </Typography>
                 <Autocomplete
                   disablePortal
-                  id="combo-box-stories"
+                  id="combo-box-dev"
                   options={users}
                   getOptionLabel={(option) => option.name}
                   sx={{ width: '100%' }}

@@ -11,13 +11,10 @@ import {
   ListItemIcon,
   ListItemText,
   Slide,
-  Dialog,
-  useMediaQuery,
-  DialogContent,
   Card,
-  CardContent
+  CardContent,
+  Modal
 } from '@material-ui/core';
-import { useTheme } from '@emotion/react';
 import { alpha, styled } from '@material-ui/system';
 
 // ----------------------------------------------------------------------
@@ -32,23 +29,65 @@ const CardMediaStyle = styled('div')({
 const CoverImgStyle = styled('img')({
   top: 0,
   width: '100%',
-  height: '100%',
+  height: '10%',
   objectFit: 'cover',
-  position: 'absolute'
+  position: 'absolute',
+  borderRadius: '10px',
+  filter: 'brightness(40%)'
 });
+
+const TeamCityLoader = styled('div')({
+  position: 'absolute',
+  left: '50%',
+  top: '50%',
+  transform: 'translate(-50%, -50%)',
+  '& > p': {
+    textAlign: 'center'
+  },
+  '& > img': {
+    marginLeft: 'auto',
+    marginRight: 'auto'
+  }
+});
+
+const GeneralInfos = styled('div')({});
 
 export default function UserMoreMenu() {
   const ref = useRef(null);
+  const timeOut = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const [teamCity, setTeamCity] = useState(false);
+
+  const showTeamCity = () => {
+    // showing teamcity report after loading
+    setTeamCity(true);
+  };
 
   const handleClickOpen = () => {
     setIsOpen(true);
   };
-
-  const handleClose = () => {
-    setIsOpen(false);
+  // Open for modal (teamcity)
+  const style = {
+    position: 'fixed',
+    // overflow: 'scroll',
+    top: '20%',
+    left: '50%',
+    transform: 'translate(-50%, -20%)',
+    width: '80%',
+    height: '90%',
+    bgcolor: 'background.paper',
+    boxShadow: 24
+  };
+  const [open, setOpen] = useState(false);
+  const handleDialogOpen = () => {
+    setOpen(true);
+    clearTimeout(timeOut.current);
+    timeOut.current = setTimeout(() => {
+      showTeamCity();
+    }, 3000);
+  };
+  const handleDialogClose = () => {
+    setOpen(false);
   };
   return (
     <>
@@ -73,24 +112,16 @@ export default function UserMoreMenu() {
           <ListItemText primary="Delete" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
 
-        <MenuItem onClick={handleClickOpen} sx={{ color: 'text.secondary' }}>
+        <MenuItem onClick={handleDialogOpen} sx={{ color: 'text.secondary' }}>
           <ListItemIcon>
             <Icon icon={teamcityIcon} width={24} height={24} />
           </ListItemIcon>
           <ListItemText primary="TeamCity" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
-        <Dialog
-          fullScreen={fullScreen}
-          open={isOpen}
-          onClose={handleClose}
-          TransitionComponent={Transition}
-          keepMounted
-          aria-labelledby="alert-dialog-slide-title"
-          aria-describedby="alert-dialog-slide-description"
-        >
-          <DialogContent>
-            <Card sx={{ position: 'relative' }}>
-              <CardContent>
+        <Modal open={open} onClose={handleDialogClose} TransitionComponent={Transition}>
+          <Card sx={style}>
+            <CardContent>
+              {teamCity ? (
                 <CardMediaStyle
                   sx={{
                     pt: 'calc(100% * 4 / 3)',
@@ -104,11 +135,17 @@ export default function UserMoreMenu() {
                   }}
                 >
                   <CoverImgStyle alt="Tests" src="/static/illustrations/testing.jpg" />
+                  <GeneralInfos />
                 </CardMediaStyle>
-              </CardContent>
-            </Card>
-          </DialogContent>
-        </Dialog>
+              ) : (
+                <TeamCityLoader>
+                  <img alt="TeamCityLogo" src="/static/icons/icon-teamcity.svg" /> <br />
+                  <p>Loading reports please wait...</p>
+                </TeamCityLoader>
+              )}
+            </CardContent>
+          </Card>
+        </Modal>
       </Menu>
     </>
   );
