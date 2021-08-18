@@ -144,7 +144,6 @@ export default function TasksFilterSidebar({
                 </Typography>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <MobileDateRangePicker
-                    showTodayButton // t5Arrerg f erreur
                     startText="Start Date"
                     endText="End Date"
                     value={formik.values.selectedDate}

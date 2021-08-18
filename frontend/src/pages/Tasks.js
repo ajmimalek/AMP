@@ -20,7 +20,6 @@ import {
 import CartWidget from 'src/components/_dashboard/tasks/TasksCartWidget';
 import { useFormik } from 'formik';
 import TasksFilterSidebar from 'src/components/_dashboard/tasks/TasksFilterSidebar';
-import TasksSort from 'src/components/_dashboard/tasks/TasksSort';
 import Page from '../components/Page';
 import Label from '../components/Label';
 import Scrollbar from '../components/Scrollbar';
@@ -211,7 +210,6 @@ function Tasks() {
               onOpenFilter={handleOpenFilter}
               onCloseFilter={handleCloseFilter}
             />
-            <TasksSort />
           </Stack>
         </Stack>
 
