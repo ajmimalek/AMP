@@ -9,7 +9,7 @@ namespace AMP.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public int Number { get; set; }
+        public string Number { get; set; }
         public string Status { get; set; }
         public string State { get; set; }
         public string BranchName { get; set; }
@@ -23,16 +23,29 @@ namespace AMP.Models
         public int VisibleArtificatSize { get; set; }
         //FK : BuildStageDuration
         public BuildStageDuration BuildStage { get; set; }
-        public int BuildStageDurationFK { get; set; }
         //FK : CodeCoverage
         public CodeCoverage CodeCoverage { get; set; }
-        public int CodeCoverageFK { get; set; }
         //FK : CodeInspections
         public CodeInspections CodeInspections { get; set; }
-        public int CodeInspectionsFK { get; set; }
         //FK : Changes
         public ICollection<Changes> Changes { get; set; }
         //FK : Tests
         public ICollection<Tests> Tests { get; set; }
+        
+        public Build(int id, string number, string status, string state, string branchName, string webURL, string description, string name)
+        {
+            Id = id;
+            Number = number;
+            Status = status;
+            State = state;
+            BranchName = branchName;
+            WebURL = webURL;
+            Description = description;
+            Name = name;
+        }
+
+        public Build()
+        {
+        }
     }
 }

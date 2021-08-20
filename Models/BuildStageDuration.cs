@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,7 +9,8 @@ namespace AMP.Models
 {
     public class BuildStageDuration
     {
-        public int Id { get; set; }
+        [ForeignKey("Build")]
+        [JsonIgnore] public int Id { get; set; }
         public int FirstStepPrep { get; set; }
         public int SourceUpdate { get; set; }
         public int ToolsUpdating { get; set; }
@@ -16,7 +19,7 @@ namespace AMP.Models
         public int BuildFinish { get; set; }
         public int ArtifactPublishing { get; set; }
         //FK : Build
-        public Build Build { get; set; }
-        public int BuildFK { get; set; }
+        [JsonIgnore] public Build Build { get; set; }
+        [JsonIgnore] public int BuildFK { get; set; }
     }
 }

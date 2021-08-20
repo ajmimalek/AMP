@@ -39,6 +39,8 @@ namespace AMP
                 s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             });
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ITeamCityRepository, TeamCityRepository>();
+
             services.AddScoped<JwtService>();
             services.AddSwaggerGen(c =>
             {

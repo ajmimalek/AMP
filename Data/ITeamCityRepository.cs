@@ -1,11 +1,18 @@
-﻿using System;
+﻿using AMP.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace AMP.Data
 {
-    interface ITeamCityRepository
+    public interface ITeamCityRepository
     {
+        Build GetBuildById(int id);
+        Changes GetBuildChanges(int id);
+        Tests GetBuildTests(int id);
+        CodeCoverage GetCodeCoverage(int id);
+        CodeInspections GetCodeInspections(int id);
+        BuildStageDuration GetBuildDuration(int id);
     }
 }

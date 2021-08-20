@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,11 +9,12 @@ namespace AMP.Models
 {
     public class CodeInspections
     {
-        public int Id { get; set; }
+        [ForeignKey("Build")]
+        [JsonIgnore] public int Id { get; set; }
         public int Errors { get; set; }
         public int Warnings { get; set; }
         //FK : Build
-        public Build Build { get; set; }
-        public int BuildFK { get; set; }
+        [JsonIgnore] public Build Build { get; set; }
+        [JsonIgnore] public int BuildFK { get; set; }
     }
 }
