@@ -15,23 +15,19 @@ import { fShortenNumber } from '../../../utils/formatNumber';
 const SOCIALS = [
   {
     name: 'FaceBook',
-    value: faker.datatype.number(),
-    icon: <Icon icon={facebookFill} color="#1877F2" width={32} height={32} />
+    value: faker.datatype.number()
   },
   {
     name: 'Google',
-    value: faker.datatype.number(),
-    icon: <Icon icon={googleFill} color="#DF3E30" width={32} height={32} />
+    value: faker.datatype.number()
   },
   {
     name: 'Linkedin',
-    value: faker.datatype.number(),
-    icon: <Icon icon={linkedinFill} color="#006097" width={32} height={32} />
+    value: faker.datatype.number()
   },
   {
     name: 'Twitter',
-    value: faker.datatype.number(),
-    icon: <Icon icon={twitterFill} color="#1C9CEA" width={32} height={32} />
+    value: faker.datatype.number()
   }
 ];
 

@@ -34,16 +34,16 @@ namespace AMP.Data
         public Build GetBuildById(int id)
         {
             Build build;
-            var response = httpClient.GetAsync(BASE_URI + "/builds/" + id.ToString() + "?fields=id,number,status,state,branchName,webUrl,statusText,queuedDate,startDate,finishDate,buildType(name)").Result;
+            var response = httpClient.GetAsync(BASE_URI + "/builds/" + id.ToString() + "?fields=id,number,status,state,branchName,webUrl,statusText,queuedDate,startDate,finishDate,buildType(name),lastChanges(change(id))").Result;
             if (response.IsSuccessStatusCode)
             {
                 var BuildResponse = response.Content.ReadAsStringAsync().Result;
                 BuildDetails BuildInfos = JsonConvert.DeserializeObject<BuildDetails>(BuildResponse);
-                build = new Build(BuildInfos.id, BuildInfos.number, BuildInfos.status, BuildInfos.state, BuildInfos.branchName, BuildInfos.webUrl, BuildInfos.statusText, BuildInfos.buildType.name);
-                /*TimeSpan waiting = Convert.ToDateTime(BuildInfos.startDate) - Convert.ToDateTime(BuildInfos.queuedDate);
-                TimeSpan exec = Convert.ToDateTime(BuildInfos.finishDate) - Convert.ToDateTime(BuildInfos.startDate);
+                build = new Build(BuildInfos.id, BuildInfos.number, BuildInfos.status, BuildInfos.state, BuildInfos.branchName, BuildInfos.webUrl, BuildInfos.statusText, BuildInfos.buildType.name, BuildInfos.lastChanges.change[0].id);
+                TimeSpan waiting = DateTime.ParseExact(BuildInfos.startDate, "yyyyMMdd'T'HHmmsszzz", CultureInfo.InvariantCulture) - DateTime.ParseExact(BuildInfos.queuedDate, "yyyyMMdd'T'HHmmsszzz", CultureInfo.InvariantCulture);
+                TimeSpan exec = DateTime.ParseExact(BuildInfos.finishDate, "yyyyMMdd'T'HHmmsszzz", CultureInfo.InvariantCulture) - DateTime.ParseExact(BuildInfos.startDate, "yyyyMMdd'T'HHmmsszzz", CultureInfo.InvariantCulture);
                 build.WaitingTime = waiting.ToString();
-                build.ExecutionTime = exec.ToString();*/
+                build.ExecutionTime = exec.ToString();
                 var Statresponse = httpClient.GetAsync(BASE_URI + "/builds/id:" + id + "/statistics").Result;
                 if (Statresponse.IsSuccessStatusCode)
                 {
@@ -76,14 +76,22 @@ namespace AMP.Data
 
         public Changes GetBuildChanges(int id)
         {
+            Build build = GetBuildById(id);
             Changes changes;
-            var response = httpClient.GetAsync(BASE_URI + "/changes/id:" + id.ToString() + "?fields=id,username,date,webUrl,comment,files(file(file,changeType))").Result;
+            Models.Files file;
+            var response = httpClient.GetAsync(BASE_URI + "/changes/id:" + build.LastChangeId.ToString() + "?fields=id,username,date,webUrl,comment,files(file(file,changeType))").Result;
             if (response.IsSuccessStatusCode)
             {
                 var Response = response.Content.ReadAsStringAsync().Result;
                 ChangesDetails changesDetails = JsonConvert.DeserializeObject<ChangesDetails>(Response);
                 changes = new Changes(changesDetails.id, changesDetails.username, changesDetails.comment);
-                //Still Needs some work   
+                changes.files = new List<Models.Files>();
+                for (int i = 0; i < changesDetails.files.file.Length; i++)
+                {
+                    file = new Models.Files(changesDetails.files.file[i].file, changesDetails.files.file[i].changeType);
+                    changes.files.Add(file);
+                }
+                return changes;
             }
             return null;
         }

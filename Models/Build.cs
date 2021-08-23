@@ -21,6 +21,7 @@ namespace AMP.Models
         public int DurationNetTime { get; set; }
         public int ArtifactSize { get; set; }
         public int VisibleArtificatSize { get; set; }
+        public int LastChangeId { get; set; }
         //FK : BuildStageDuration
         public BuildStageDuration BuildStage { get; set; }
         //FK : CodeCoverage
@@ -28,11 +29,11 @@ namespace AMP.Models
         //FK : CodeInspections
         public CodeInspections CodeInspections { get; set; }
         //FK : Changes
-        public ICollection<Changes> Changes { get; set; }
+        public Changes Changes { get; set; }
         //FK : Tests
         public ICollection<Tests> Tests { get; set; }
         
-        public Build(int id, string number, string status, string state, string branchName, string webURL, string description, string name)
+        public Build(int id, string number, string status, string state, string branchName, string webURL, string description, string name, int lastChangeId)
         {
             Id = id;
             Number = number;
@@ -42,6 +43,7 @@ namespace AMP.Models
             WebURL = webURL;
             Description = description;
             Name = name;
+            LastChangeId = lastChangeId;
         }
 
         public Build()

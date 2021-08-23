@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,11 +13,12 @@ namespace AMP.Models
         public DateTime DateChange { get; set; }
         public string Comment { get; set; }
         //FK : Files
-        public ICollection<Files> files { get; set; }
+        public List<Files> files { get; set; }
         //FK : Build
-        public Build Build { get; set; }
-        public int BuildFK { get; set; }
+        [JsonIgnore] public Build Build { get; set; }
+        [JsonIgnore] public int BuildFK { get; set; }
 
+        //Constructor
         public Changes(int id, string userName, string comment)
         {
             Id = id;

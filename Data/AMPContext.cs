@@ -48,7 +48,10 @@ namespace AMP.Data
                     Role = "Manager"
                 }
             );
-
+            modelBuilder.Entity<Build>()
+                .HasOne(b => b.Changes)
+                .WithOne(c => c.Build)
+                .HasForeignKey<Changes>(c => c.BuildFK);
         }
     }
 }

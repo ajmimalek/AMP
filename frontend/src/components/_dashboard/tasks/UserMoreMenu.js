@@ -1,6 +1,5 @@
 import { Icon } from '@iconify/react';
-import { forwardRef, useRef, useState } from 'react';
-import trash2Outline from '@iconify/icons-eva/trash-2-outline';
+import { useRef, useState } from 'react';
 import moreVerticalFill from '@iconify/icons-eva/more-vertical-fill';
 import teamcityIcon from '@iconify/icons-simple-icons/teamcity';
 // material
@@ -10,16 +9,15 @@ import {
   IconButton,
   ListItemIcon,
   ListItemText,
-  Slide,
   Card,
   CardContent,
-  Modal
+  Modal,
+  Chip
 } from '@material-ui/core';
 import { alpha, styled } from '@material-ui/system';
+import { Check, GitHub, Timer } from '@material-ui/icons';
 
 // ----------------------------------------------------------------------
-// Slide animation for forget Password
-const Transition = forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
 const CardMediaStyle = styled('div')({
   position: 'relative',
@@ -29,7 +27,7 @@ const CardMediaStyle = styled('div')({
 const CoverImgStyle = styled('img')({
   top: 0,
   width: '100%',
-  height: '10%',
+  height: '15%',
   objectFit: 'cover',
   position: 'absolute',
   borderRadius: '10px',
@@ -50,7 +48,21 @@ const TeamCityLoader = styled('div')({
   }
 });
 
-const GeneralInfos = styled('div')({});
+const Description = styled('div')({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0
+});
+const Left = styled('div')({
+  color: 'white',
+  marginLeft: '15px',
+  marginTop: '20px',
+  '& > b': {
+    lineHeight: '40px'
+  }
+});
 
 export default function UserMoreMenu() {
   const ref = useRef(null);
@@ -69,11 +81,11 @@ export default function UserMoreMenu() {
   // Open for modal (teamcity)
   const style = {
     position: 'fixed',
-    // overflow: 'scroll',
+    overflow: 'scroll',
     top: '20%',
     left: '50%',
     transform: 'translate(-50%, -20%)',
-    width: '80%',
+    width: '90%',
     height: '90%',
     bgcolor: 'background.paper',
     boxShadow: 24
@@ -105,14 +117,13 @@ export default function UserMoreMenu() {
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-
         <MenuItem onClick={handleDialogOpen} sx={{ color: 'text.secondary' }}>
           <ListItemIcon>
             <Icon icon={teamcityIcon} width={24} height={24} />
           </ListItemIcon>
           <ListItemText primary="TeamCity" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
-        <Modal open={open} onClose={handleDialogClose} TransitionComponent={Transition}>
+        <Modal open={open} onClose={handleDialogClose}>
           <Card sx={style}>
             <CardContent>
               {teamCity ? (
@@ -129,7 +140,47 @@ export default function UserMoreMenu() {
                   }}
                 >
                   <CoverImgStyle alt="Tests" src="/static/illustrations/testing.jpg" />
-                  <GeneralInfos />
+                  <Description>
+                    <Left>
+                      # number : name <br />
+                      <b>State :</b>{' '}
+                      <Chip
+                        icon={<Check />} // Finished : Check ,Not finished : Clear
+                        label="finished" // change from API
+                        variant="outlined"
+                        size="small"
+                        color="success" // Finished : success ,Not finished : error
+                      />{' '}
+                      <br />
+                      <b>Branch :</b>{' '}
+                      <Chip
+                        icon={<GitHub />}
+                        label="master" // change from API
+                        variant="outlined"
+                        size="small"
+                        color="warning"
+                      />{' '}
+                      <br />
+                      <b>Waiting Time :</b>{' '}
+                      {/* https://next.material-ui.com/components/chips/#main-content */}
+                      <Chip
+                        icon={<Timer />}
+                        label="time" // change from API
+                        variant="outlined"
+                        size="small"
+                        color="info"
+                      />{' '}
+                      <br />
+                      <b>Execution Time :</b>{' '}
+                      <Chip
+                        icon={<Timer />}
+                        label="time" // change from API
+                        variant="outlined"
+                        size="small"
+                        color="info"
+                      />{' '}
+                    </Left>
+                  </Description>
                 </CardMediaStyle>
               ) : (
                 <TeamCityLoader>
