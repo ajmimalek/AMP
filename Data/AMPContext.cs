@@ -14,15 +14,17 @@ namespace AMP.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<Build> Builds { get; set; }
-        public DbSet<BuildStageDuration> BuildStageDurations { get; set; }
         public DbSet<Changes> Changes { get; set; }
         public DbSet<CodeCoverage> CodeCoverage { get; set; }
         public DbSet<CodeInspections> CodeInspections { get; set; }
         public DbSet<Files> Files { get; set; }
-        public DbSet<Tests> Tests { get; set; }
+        public DbSet<Sprint> Sprints { get; set; }
+        public DbSet<Story> Stories { get; set; }
+        public DbSet<Models.Task> Tasks { get; set; }
         //Seeding Data when runing the application
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //Get User Infos from JIRA myself
             modelBuilder.Entity<User>(entity =>
             {
                 entity.HasIndex(e => e.Email).IsUnique();
@@ -33,6 +35,7 @@ namespace AMP.Data
                 {
                     Id = Guid.NewGuid(),
                     UserName = "ajmimalek",
+                    Name="Malek Ajmi",
                     Password = BCrypt.Net.BCrypt.HashPassword("malek123"),
                     ConfirmPassword = BCrypt.Net.BCrypt.HashPassword("malek123"),
                     Email = "malek.ajmi@se.linedata.com",

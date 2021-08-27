@@ -25,7 +25,7 @@ function SiteItem({ site }) {
 }
 
 NumericData.propTypes = {
-  data: PropTypes.object,
+  data: PropTypes.array,
   title: PropTypes.string,
   backgroundcolor: PropTypes.string,
   textcolor: PropTypes.string

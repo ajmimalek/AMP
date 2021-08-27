@@ -19,103 +19,19 @@ import {
   Container,
   Grid,
   Button,
-  CardHeader
+  CardHeader,
+  Avatar
 } from '@material-ui/core';
 import { alpha, Box, styled } from '@material-ui/system';
-import { Add, Check, GitHub, Timer } from '@material-ui/icons';
-import faker from 'faker';
+import { Add, Check, Clear, GitHub, Timer } from '@material-ui/icons';
 import palette from 'src/theme/palette';
 import { MHidden } from 'src/components/@material-extend';
 import { DataGrid } from '@material-ui/data-grid';
+import { makeStyles } from '@material-ui/styles';
+import { fPercent } from 'src/utils/formatNumber';
+import account from 'src/_mocks_/account';
 import NumericData from '../teamcity/NumericData';
 import CodeCoverageChart from '../teamcity/CodeCoverageChart';
-
-// -----------------Data From API----------------------------------
-const ClassCoverage = [
-  {
-    name: 'Class Coverage Percent',
-    value: faker.datatype.float().toString().concat(' %')
-  },
-  {
-    name: 'Covered Classes',
-    value: faker.datatype.number()
-  },
-  {
-    name: 'Non Covered Classes',
-    value: faker.datatype.number()
-  },
-  {
-    name: 'Total Classes',
-    value: faker.datatype.number()
-  }
-];
-const MethodCoverage = [
-  {
-    name: 'Method Coverage Percent',
-    value: faker.datatype.float().toString().concat(' %')
-  },
-  {
-    name: 'Covered Methods',
-    value: faker.datatype.number()
-  },
-  {
-    name: 'Non Covered Methods',
-    value: faker.datatype.number()
-  },
-  {
-    name: 'Total Methods',
-    value: faker.datatype.number()
-  }
-];
-const StatementCoverage = [
-  {
-    name: 'Statement Coverage Percent',
-    value: faker.datatype.float().toString().concat(' %')
-  },
-  {
-    name: 'Covered Statements',
-    value: faker.datatype.number()
-  },
-  {
-    name: 'Non Covered Statements',
-    value: faker.datatype.number()
-  },
-  {
-    name: 'Total Statements',
-    value: faker.datatype.number()
-  }
-];
-const Filemanipulation = [
-  {
-    name: 'Added Files',
-    value: 5,
-    icon: <Icon icon={fileAddFill} color={palette.success.dark} width={32} height={32} />
-  },
-  {
-    name: 'Edited Files',
-    value: 2,
-    icon: <Icon icon={fileTextFill} color={palette.warning.dark} width={32} height={32} />
-  },
-  {
-    name: 'Deleted Files',
-    value: 0,
-    icon: <Icon icon={fileRemoveFill} color={palette.error.dark} width={32} height={32} />
-  }
-];
-const columns = [
-  { field: 'fName', headerName: 'File name', width: 190 },
-  { field: 'changeType', headerName: 'Change Type', width: 40 }
-];
-
-const rows = [
-  { fName: 'Public.Test/OrderQuantitiesModifiedTests.cs', changeType: 'added' },
-  { fName: 'Public.Test/OrderQuantitiesModifiedTests.cs', changeType: 'added' },
-  { fName: 'Public.Test/OrderQuantitiesModifiedTests.cs', changeType: 'added' },
-  { fName: 'Public.Test/OrderQuantitiesModifiedTests.cs', changeType: 'added' },
-  { fName: 'Public.Test/OrderQuantitiesModifiedTests.cs', changeType: 'added' },
-  { fName: 'Public.Test/OrderQuantitiesModifiedTests.cs', changeType: 'added' }
-];
-// ----------------------------------------------------------------------
 
 const CardMediaStyle = styled('div')({
   position: 'relative',
@@ -176,20 +92,52 @@ const Right = styled('div')({
     lineHeight: '40px'
   }
 });
+
+const styles = () => ({
+  success: {
+    backgroundColor: '#229A16'
+  },
+  failure: {
+    backgroundColor: '#B71928'
+  }
+});
+
+const useStyles = makeStyles(styles);
 export default function UserMoreMenu() {
+  const classes = useStyles();
   const ref = useRef(null);
-  const timeOut = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const [teamCity, setTeamCity] = useState(false);
-
-  const showTeamCity = () => {
-    // showing teamcity report after loading
-    setTeamCity(true);
-  };
-
-  const handleClickOpen = () => {
-    setIsOpen(true);
-  };
+  const [number, setNumber] = useState('');
+  const [name, setName] = useState('');
+  const [state, setState] = useState('');
+  const [branchName, setBranchName] = useState('');
+  const [webURL, setWebURL] = useState('');
+  const [description, setDescription] = useState('');
+  const [errors, setErrors] = useState(0);
+  const [warnings, setWarnings] = useState(0);
+  const [status, setStatus] = useState('');
+  const [sucess, setSuccess] = useState(true);
+  const [executionTime, setExecutionTime] = useState('');
+  const [classPercent, setClassPercent] = useState(0.0);
+  const [methodPercent, setMethodPercent] = useState(0.0);
+  const [statementPercent, setStatementPercent] = useState(0.0);
+  const [classCovered, setClassCovered] = useState(0);
+  const [classNonCovered, setClassNonCovered] = useState(0);
+  const [classTotal, setClassTotal] = useState(0);
+  const [methodCovered, setMethodCovered] = useState(0);
+  const [methodNonCovered, setMethodNonCovered] = useState(0);
+  const [methodTotal, setMethodTotal] = useState(0);
+  const [statementCovered, setStatementCovered] = useState(0);
+  const [statementNonCovered, setStatementNonCovered] = useState(0);
+  const [statementTotal, setStatementTotal] = useState(0);
+  const [addedFiles, setAddedFiles] = useState(0);
+  const [editedFiles, setEditedFiles] = useState(0);
+  const [deletedFiles, setDeletedFiles] = useState(0);
+  const [userName, setUserName] = useState('');
+  const [dateChange, setDateChange] = useState('');
+  const [comment, setComment] = useState('');
+  const [files, setFiles] = useState([]);
   // Open for modal (teamcity)
   const style = {
     position: 'fixed',
@@ -205,11 +153,132 @@ export default function UserMoreMenu() {
   const [open, setOpen] = useState(false);
   const handleDialogOpen = () => {
     setOpen(true);
-    clearTimeout(timeOut.current);
-    timeOut.current = setTimeout(() => {
-      showTeamCity();
-    }, 3000);
+    (async () => {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/TeamCity/build/30819`, {
+        // id must be passed through task table
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include'
+      });
+      const content = await res.json();
+      setTeamCity(true);
+      console.log(content);
+      setNumber(content.number);
+      setName(content.name);
+      setBranchName(content.branchName);
+      setState(content.state);
+      setDescription(content.description);
+      setWebURL(content.webURL);
+      setErrors(content.codeInspections.errors);
+      setWarnings(content.codeInspections.warnings);
+      setStatus(content.status);
+      if (content.status === 'FAILURE') {
+        setSuccess(false);
+      }
+      setExecutionTime(content.executionTime);
+      // Code Coverage
+      setClassCovered(content.codeCoverage.classCovered);
+      setMethodCovered(content.codeCoverage.methodCovered);
+      setStatementCovered(content.codeCoverage.statementCovered);
+      setClassNonCovered(content.codeCoverage.classNonCovered);
+      setMethodNonCovered(content.codeCoverage.methodNonCovered);
+      setStatementNonCovered(content.codeCoverage.statementNonCovered);
+      setClassTotal(content.codeCoverage.classTotal);
+      setMethodTotal(content.codeCoverage.methodTotal);
+      setStatementTotal(content.codeCoverage.statementTotal);
+      setClassPercent(content.codeCoverage.classPercent);
+      setMethodPercent(content.codeCoverage.methodPercent);
+      setStatementPercent(content.codeCoverage.statementPercent);
+      // File Manipulations
+      setAddedFiles(content.changes.addedFiles);
+      setEditedFiles(content.changes.editedFiles);
+      setDeletedFiles(content.changes.deletedFiles);
+      setFiles(content.changes.files);
+      setUserName(content.changes.userName);
+      setComment(content.changes.comment);
+      setDateChange(content.changes.dateChange);
+    })();
   };
+  // -----------------Data From API----------------------------------
+  const ClassCoverage = [
+    {
+      name: 'Class Coverage Percent',
+      value: fPercent(classPercent)
+    },
+    {
+      name: 'Covered Classes',
+      value: classCovered
+    },
+    {
+      name: 'Non Covered Classes',
+      value: classNonCovered
+    },
+    {
+      name: 'Total Classes',
+      value: classTotal
+    }
+  ];
+  const MethodCoverage = [
+    {
+      name: 'Method Coverage Percent',
+      value: fPercent(methodPercent)
+    },
+    {
+      name: 'Covered Methods',
+      value: methodCovered
+    },
+    {
+      name: 'Non Covered Methods',
+      value: methodNonCovered
+    },
+    {
+      name: 'Total Methods',
+      value: methodTotal
+    }
+  ];
+  const StatementCoverage = [
+    {
+      name: 'Statement Coverage Percent',
+      value: fPercent(statementPercent)
+    },
+    {
+      name: 'Covered Statements',
+      value: statementCovered
+    },
+    {
+      name: 'Non Covered Statements',
+      value: statementNonCovered
+    },
+    {
+      name: 'Total Statements',
+      value: statementTotal
+    }
+  ];
+  const CHART_DATA = [
+    { data: [fPercent(classPercent), fPercent(methodPercent), fPercent(statementPercent)] }
+  ];
+  const Filemanipulation = [
+    {
+      name: 'Added Files',
+      value: addedFiles,
+      icon: <Icon icon={fileAddFill} color={palette.success.dark} width={32} height={32} />
+    },
+    {
+      name: 'Edited Files',
+      value: editedFiles,
+      icon: <Icon icon={fileTextFill} color={palette.warning.dark} width={32} height={32} />
+    },
+    {
+      name: 'Deleted Files',
+      value: deletedFiles,
+      icon: <Icon icon={fileRemoveFill} color={palette.error.dark} width={32} height={32} />
+    }
+  ];
+  const columns = [
+    { field: 'id', headerName: 'ID', width: 100 },
+    { field: 'name', headerName: 'File name', width: 330 },
+    { field: 'changeType', headerName: 'Change Type', width: 190 }
+  ];
+  // ----------------------------------------------------------------------
   const handleDialogClose = () => {
     setOpen(false);
   };
@@ -264,7 +333,7 @@ export default function UserMoreMenu() {
                         }}
                       >
                         <Left>
-                          # number
+                          # {number}
                           <div
                             style={{
                               textAlign: 'center',
@@ -273,21 +342,21 @@ export default function UserMoreMenu() {
                               marginBottom: '60px'
                             }}
                           >
-                            Build Name
+                            {name}
                           </div>
                           <b>State :</b>{' '}
                           <Chip
-                            icon={<Check />} // Finished : Check ,Not finished : Clear
-                            label="finished" // change from API
+                            icon={state === 'finished' ? <Check /> : <Clear />} // Finished : Check ,Not finished : Clear
+                            label={state}
                             variant="outlined"
                             size="small"
-                            color="success" // Finished : success ,Not finished : error
+                            color={state === 'finished' ? 'success' : 'error'} // Finished : success ,Not finished : error
                           />{' '}
                           <br />
                           <b>Branch :</b>{' '}
                           <Chip
                             icon={<GitHub />}
-                            label="master" // change from API
+                            label={branchName}
                             variant="outlined"
                             size="small"
                             color="warning"
@@ -300,7 +369,7 @@ export default function UserMoreMenu() {
                               marginTop: '20px'
                             }}
                           >
-                            Tests passed: XX; inspections total: XX, errors: XX
+                            {description}
                           </div>
                           <div
                             style={{ textAlign: 'center', marginTop: '30px', marginBottom: '30px' }}
@@ -318,7 +387,7 @@ export default function UserMoreMenu() {
                                 borderRadius: '10px'
                               }}
                             >
-                              0
+                              {errors}
                             </div>
                             &nbsp; errors, &nbsp;
                             <div
@@ -336,20 +405,26 @@ export default function UserMoreMenu() {
                                 height: '30px'
                               }}
                             >
-                              702
+                              {warnings}
                             </div>
                             &nbsp; warnings.
                           </div>
                           <Box textAlign="center">
-                            <Button variant="outlined" color="inherit" startIcon={<Add />} href="">
+                            <Button
+                              variant="outlined"
+                              target="_blank"
+                              color="inherit"
+                              startIcon={<Add />}
+                              href={webURL}
+                            >
                               Details
                             </Button>
                           </Box>
                         </Middle>
                         <Right>
                           <div
+                            className={sucess ? classes.success : classes.failure}
                             style={{
-                              backgroundColor: '#229A16',
                               fontWeight: 'bolder',
                               paddingBottom: '5px',
                               marginTop: '10px',
@@ -359,12 +434,12 @@ export default function UserMoreMenu() {
                               marginBottom: '100px'
                             }}
                           >
-                            BUILD SUCCESS
+                            BUILD {status}
                           </div>
                           <b>Execution Time :</b>{' '}
                           <Chip
                             icon={<Timer />}
-                            label="time" // change from API
+                            label={executionTime} // change from API
                             variant="outlined"
                             size="small"
                             color="info"
@@ -399,18 +474,53 @@ export default function UserMoreMenu() {
                           />
                         </Grid>
                         <Grid item xs={12} md={6} lg={8}>
-                          <CodeCoverageChart />
+                          <CodeCoverageChart CHART_DATA={CHART_DATA} />
                         </Grid>
                         <Grid item xs={12} sm={6} md={4}>
                           <NumericData data={Filemanipulation} title="File Manipulations" />
                         </Grid>
                         <Grid item xs={12} sm={6} md={4}>
-                          <Card>
-                            <CardHeader title="Last Change Infos" sx={{ textAlign: 'center' }} />
+                          <Card sx={{ textAlign: 'center', height: 344 }}>
+                            <CardHeader title="Last Change Infos" />
+                            <CardContent>
+                              <b>Done by : </b>{' '}
+                              <Chip
+                                avatar={<Avatar alt="last change actor" src={account.photoURL} />}
+                                label={userName}
+                                variant="outlined"
+                              />
+                              <div
+                                style={{
+                                  backgroundColor: '#B71928',
+                                  color: 'white',
+                                  fontWeight: 'bolder',
+                                  width: '50%',
+                                  paddingBottom: '10px',
+                                  paddingTop: '10px',
+                                  paddingLeft: '10px',
+                                  paddingRight: '10px',
+                                  marginRight: 'auto',
+                                  marginLeft: 'auto',
+                                  marginTop: '10px',
+                                  textAlign: 'center',
+                                  borderRadius: '10px'
+                                }}
+                              >
+                                {dateChange}
+                              </div>
+                              {comment}
+                            </CardContent>
                           </Card>
                         </Grid>
                         <Grid item xs={12} md={6} lg={8}>
-                          <DataGrid rows={rows} columns={columns} pageSize={5} />
+                          <div style={{ height: 344 }}>
+                            <DataGrid
+                              rows={files}
+                              columns={columns}
+                              pageSize={5}
+                              rowsPerPageOptions={[2, 5, 7]}
+                            />
+                          </div>
                         </Grid>
                       </Grid>
                     </Container>

@@ -34,41 +34,14 @@ namespace AMP.Data
         public Build GetBuildById(int id)
         {
             Build build;
-            var response = httpClient.GetAsync(BASE_URI + "/builds/" + id.ToString() + "?fields=id,number,status,state,branchName,webUrl,statusText,queuedDate,startDate,finishDate,buildType(name),lastChanges(change(id))").Result;
+            var response = httpClient.GetAsync(BASE_URI + "/builds/" + id.ToString() + "?fields=id,number,status,state,branchName,webUrl,statusText,startDate,finishDate,buildType(name),lastChanges(change(id))").Result;
             if (response.IsSuccessStatusCode)
             {
                 var BuildResponse = response.Content.ReadAsStringAsync().Result;
                 BuildDetails BuildInfos = JsonConvert.DeserializeObject<BuildDetails>(BuildResponse);
                 build = new Build(BuildInfos.id, BuildInfos.number, BuildInfos.status, BuildInfos.state, BuildInfos.branchName, BuildInfos.webUrl, BuildInfos.statusText, BuildInfos.buildType.name, BuildInfos.lastChanges.change[0].id);
-                TimeSpan waiting = DateTime.ParseExact(BuildInfos.startDate, "yyyyMMdd'T'HHmmsszzz", CultureInfo.InvariantCulture) - DateTime.ParseExact(BuildInfos.queuedDate, "yyyyMMdd'T'HHmmsszzz", CultureInfo.InvariantCulture);
                 TimeSpan exec = DateTime.ParseExact(BuildInfos.finishDate, "yyyyMMdd'T'HHmmsszzz", CultureInfo.InvariantCulture) - DateTime.ParseExact(BuildInfos.startDate, "yyyyMMdd'T'HHmmsszzz", CultureInfo.InvariantCulture);
-                build.WaitingTime = waiting.ToString();
                 build.ExecutionTime = exec.ToString();
-                var Statresponse = httpClient.GetAsync(BASE_URI + "/builds/id:" + id + "/statistics").Result;
-                if (Statresponse.IsSuccessStatusCode)
-                {
-                    var BuildStatResponse = Statresponse.Content.ReadAsStringAsync().Result;
-                    BuildStats stats = JsonConvert.DeserializeObject<BuildStats>(BuildStatResponse);
-                    foreach (var property in stats.property)
-                    {
-                        if (property.name.Equals("BuildDuration"))
-                        {
-                            build.Duration = int.Parse(property.value);
-                        }
-                        if (property.name.Equals("BuildDurationNetTime"))
-                        {
-                            build.DurationNetTime = int.Parse(property.value);
-                        }
-                        if (property.name.Equals("ArtifactsSize"))
-                        {
-                            build.ArtifactSize = int.Parse(property.value);
-                        }
-                        if (property.name.Equals("VisibleArtifactsSize"))
-                        {
-                            build.VisibleArtificatSize = int.Parse(property.value);
-                        }
-                    }
-                }
                 return build;
             }
             return null;
@@ -88,7 +61,19 @@ namespace AMP.Data
                 changes.files = new List<Models.Files>();
                 for (int i = 0; i < changesDetails.files.file.Length; i++)
                 {
-                    file = new Models.Files(changesDetails.files.file[i].file, changesDetails.files.file[i].changeType);
+                    file = new Models.Files(i,changesDetails.files.file[i].file, changesDetails.files.file[i].changeType);
+                    if (changesDetails.files.file[i].changeType.Equals("added"))
+                    {
+                        changes.AddedFiles++;
+                    }
+                    if (changesDetails.files.file[i].changeType.Equals("edited"))
+                    {
+                        changes.EditedFiles++;
+                    }
+                    if (changesDetails.files.file[i].changeType.Equals("deleted"))
+                    {
+                        changes.DeletedFiles++;
+                    }
                     changes.files.Add(file);
                 }
                 return changes;
@@ -96,52 +81,6 @@ namespace AMP.Data
             return null;
         }
 
-        public BuildStageDuration GetBuildDuration(int id)
-        {
-            BuildStageDuration buildDuration = new BuildStageDuration();
-            var Statresponse = httpClient.GetAsync(BASE_URI + "/builds/id:" + id + "/statistics").Result;
-            if (Statresponse.IsSuccessStatusCode)
-            {
-                var BuildStatResponse = Statresponse.Content.ReadAsStringAsync().Result;
-                BuildStats stats = JsonConvert.DeserializeObject<BuildStats>(BuildStatResponse);
-                foreach (var property in stats.property)
-                {
-                    if (property.name.Equals("buildStageDuration:firstStepPreparation"))
-                    {
-                        buildDuration.FirstStepPrep = int.Parse(property.value);
-                    }
-                    if (property.name.Equals("buildStageDuration:sourcesUpdate"))
-                    {
-                        buildDuration.SourceUpdate = int.Parse(property.value);
-                    }
-                    if (property.name.Equals("buildStageDuration:toolsUpdating"))
-                    {
-                        buildDuration.ToolsUpdating = int.Parse(property.value);
-                    }
-                    if (property.name.Equals("buildStageDuration:buildStepRUNNER_11"))
-                    {
-                        buildDuration.BStepRunner_11 = int.Parse(property.value);
-                    }
-                    if (property.name.Equals("buildStageDuration:buildStepRUNNER_12"))
-                    {
-                        buildDuration.BStepRunner_12 = int.Parse(property.value);
-                    }
-                    if (property.name.Equals("buildStageDuration:buildFinishing"))
-                    {
-                        buildDuration.BuildFinish = int.Parse(property.value);
-                    }
-                    if (property.name.Equals("buildStageDuration:artifactsPublishing"))
-                    {
-                        buildDuration.ArtifactPublishing = int.Parse(property.value);
-                    }
-                }
-            }
-            return buildDuration;
-        }
-        public Tests GetBuildTests(int id)
-        {
-            throw new NotImplementedException();
-        }
 
         public CodeCoverage GetCodeCoverage(int id)
         {

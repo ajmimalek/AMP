@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useState } from 'react';
+import { forwardRef, useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
 import { Icon } from '@iconify/react';
@@ -13,16 +13,45 @@ import {
   TextField,
   IconButton,
   InputAdornment,
-  FormControlLabel
+  FormControlLabel,
+  Slide
 } from '@material-ui/core';
 import { LoadingButton } from '@material-ui/lab';
 import { Lock, Mail } from '@material-ui/icons';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/core/Alert';
 
 // ----------------------------------------------------------------------
+const Alert = forwardRef((props, ref) => (
+  <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
+));
+
+function TransitionDown(props) {
+  return <Slide {...props} direction="down" />;
+}
 
 export default function LoginForm() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [message, setMessage] = useState('');
+  const [severity, setSeverity] = useState('success');
+  const [state, setState] = useState({
+    open: false,
+    vertical: 'top',
+    horizontal: 'right'
+  });
+
+  const { vertical, horizontal, open } = state;
+
+  const handleClick = (newState, severity, msg) => {
+    setSeverity(severity);
+    setState({ open: true, ...newState });
+    setMessage(msg);
+  };
+
+  const handleClose = () => {
+    setState({ ...state, open: false });
+  };
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string().required('Username is required'),
@@ -36,8 +65,51 @@ export default function LoginForm() {
       remember: true
     },
     validationSchema: LoginSchema,
-    onSubmit: () => {
-      navigate('/dashboard', { replace: true });
+    onSubmit: async () => {
+      console.log(process.env.REACT_APP_API_URL);
+      await fetch(`${process.env.REACT_APP_API_URL}/Auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          email: values.email,
+          password: values.password
+        })
+      })
+        .then((res) => {
+          if (res.status === 200) {
+            handleClick(
+              {
+                vertical: 'top',
+                horizontal: 'right'
+              },
+              'success',
+              'Logged Successfuly'
+            );
+            navigate('/dashboard', { replace: true });
+          } else {
+            formik.resetForm();
+            handleClick(
+              {
+                vertical: 'top',
+                horizontal: 'right'
+              },
+              'warning',
+              res.statusText
+            );
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          handleClick(
+            {
+              vertical: 'top',
+              horizontal: 'right'
+            },
+            'error',
+            err.message
+          );
+        });
     }
   });
 
@@ -113,6 +185,17 @@ export default function LoginForm() {
         >
           Login
         </LoadingButton>
+        <Snackbar
+          anchorOrigin={{ vertical, horizontal }}
+          open={open}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          TransitionComponent={TransitionDown}
+        >
+          <Alert onClose={handleClose} severity={severity} sx={{ width: '100%' }}>
+            {message}
+          </Alert>
+        </Snackbar>
       </Form>
     </FormikProvider>
   );

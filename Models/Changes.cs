@@ -12,6 +12,9 @@ namespace AMP.Models
         public string UserName { get; set; }
         public DateTime DateChange { get; set; }
         public string Comment { get; set; }
+        public int AddedFiles { get; set; }
+        public int EditedFiles { get; set; }
+        public int DeletedFiles { get; set; }
         //FK : Files
         public List<Files> files { get; set; }
         //FK : Build
@@ -24,6 +27,9 @@ namespace AMP.Models
             Id = id;
             UserName = userName;
             Comment = comment;
+            AddedFiles = 0;
+            EditedFiles = 0;
+            DeletedFiles = 0;
         }
     }
 }

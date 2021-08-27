@@ -13,7 +13,6 @@ namespace AMP.Models
         // JsonIgnore : Not sending password in JSON
         [Key]
         public Guid Id { get; set; }
-        [Required(ErrorMessage = "UserName is required")]
         public string UserName { get; set; }
         [Required(ErrorMessage = "Password is required")] 
         [DataType(DataType.Password)]
@@ -25,10 +24,9 @@ namespace AMP.Models
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "Password and Confirmation Password must match.")]
         [JsonIgnore] public string ConfirmPassword { get; set; }
-        [Required(ErrorMessage = "Email is required")]
-        // data annotation to validate email in C#
-        [EmailAddress(ErrorMessage = "Enter a valid Email address")]
         public string Email { get; set; }
         public string Role { get; set; }
+        public string Avatar { get; set; }
+        public string Name { get; set; }
     }
 }

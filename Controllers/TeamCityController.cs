@@ -36,7 +36,6 @@ namespace AMP.Controllers
                 return Unauthorized();
             }
             var build = _repository.GetBuildById(id);
-            build.BuildStage = _repository.GetBuildDuration(id);
             build.CodeCoverage = _repository.GetCodeCoverage(id);
             build.CodeInspections = _repository.GetCodeInspections(id);
             build.Changes = _repository.GetBuildChanges(id);

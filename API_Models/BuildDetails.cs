@@ -16,7 +16,6 @@ namespace AMP.API_Models
         public string webUrl { get; set; }
         public string statusText { get; set; }
         public Buildtype buildType { get; set; }
-        public string queuedDate { get; set; }
         public string startDate { get; set; }
         public string finishDate { get; set; }
         public Lastchanges lastChanges { get; set; }

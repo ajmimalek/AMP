@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import homeFill from '@iconify/icons-eva/home-fill';
 import personFill from '@iconify/icons-eva/person-fill';
 import settings2Fill from '@iconify/icons-eva/settings-2-fill';
@@ -9,8 +9,8 @@ import { alpha } from '@material-ui/core/styles';
 import { Button, Box, Divider, MenuItem, Typography, Avatar, IconButton } from '@material-ui/core';
 // components
 import MenuPopover from '../../components/MenuPopover';
-//
 import account from '../../_mocks_/account';
+//
 
 // ----------------------------------------------------------------------
 
@@ -35,6 +35,20 @@ const MENU_OPTIONS = [
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
+  const [name, setName] = useState('AMP Member');
+  const [role, setRole] = useState('Stupid');
+  useEffect(() => {
+    (async () => {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/Auth/user`, {
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include'
+      });
+      const content = await res.json();
+      console.log(content);
+      setName(content.userName);
+      setRole(content.role);
+    })();
+  }, []);
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
 
@@ -43,6 +57,13 @@ export default function AccountPopover() {
   };
   const handleClose = () => {
     setOpen(false);
+  };
+  const handleLogOut = async () => {
+    await fetch(`${process.env.REACT_APP_API_URL}/Auth/logout`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include'
+    });
   };
 
   return (
@@ -78,10 +99,10 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle1" noWrap>
-            {account.displayName}
+            {name}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {account.role}
+            {role}
           </Typography>
         </Box>
 
@@ -111,7 +132,13 @@ export default function AccountPopover() {
 
         <Box sx={{ p: 2, pt: 1.5 }}>
           <Button fullWidth color="inherit" variant="outlined">
-            <Box component={RouterLink} to="/" color="inherit" sx={{ textDecoration: 'none' }}>
+            <Box
+              component={RouterLink}
+              to="/login"
+              color="inherit"
+              onClick={handleLogOut}
+              sx={{ textDecoration: 'none' }}
+            >
               Logout
             </Box>
           </Button>

@@ -10,9 +10,7 @@ namespace AMP.Data
     {
         Build GetBuildById(int id);
         Changes GetBuildChanges(int id);
-        Tests GetBuildTests(int id);
         CodeCoverage GetCodeCoverage(int id);
         CodeInspections GetCodeInspections(int id);
-        BuildStageDuration GetBuildDuration(int id);
     }
 }

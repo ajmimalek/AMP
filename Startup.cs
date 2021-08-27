@@ -40,6 +40,7 @@ namespace AMP
             });
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ITeamCityRepository, TeamCityRepository>();
+            services.AddScoped<IJiraRepository, JiraRepository>();
 
             services.AddScoped<JwtService>();
             services.AddSwaggerGen(c =>
@@ -80,7 +81,7 @@ namespace AMP
             app.UseRouting();
 
             app.UseCors(options => options
-                .WithOrigins("https://localhost:3000")
+                .WithOrigins("http://localhost:3000")
                 .AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowCredentials() //send cookies in the frontend

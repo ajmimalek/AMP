@@ -8,7 +8,7 @@ namespace AMP.Models
 {
     public class Files
     {
-        [JsonIgnore] public int Id { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public string ChangeType { get; set; }
         //FK : Changes
@@ -16,8 +16,9 @@ namespace AMP.Models
         [JsonIgnore] public int ChangesFK { get; set; }
 
         //Constructor
-        public Files(string name, string changeType)
+        public Files(int id, string name, string changeType)
         {
+            Id = id;
             Name = name;
             ChangeType = changeType;
         }

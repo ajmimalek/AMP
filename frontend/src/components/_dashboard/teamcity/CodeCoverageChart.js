@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { merge } from 'lodash';
 import ReactApexChart from 'react-apexcharts';
 // material
@@ -9,9 +10,11 @@ import { BaseOptionChart } from '../../charts';
 
 // ----------------------------------------------------------------------
 
-const CHART_DATA = [{ data: [400, 430, 448] }];
+CodeCoverageChart.propTypes = {
+  CHART_DATA: PropTypes.array
+};
 
-export default function CodeCoverageChart() {
+export default function CodeCoverageChart({ CHART_DATA }) {
   const chartOptions = merge(BaseOptionChart(), {
     tooltip: {
       marker: { show: true },
