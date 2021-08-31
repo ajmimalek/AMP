@@ -1,18 +1,9 @@
 import PropTypes from 'prop-types';
 import { Icon } from '@iconify/react';
 import searchFill from '@iconify/icons-eva/search-fill';
-import trash2Fill from '@iconify/icons-eva/trash-2-fill';
 // material
 import { styled } from '@material-ui/core/styles';
-import {
-  Box,
-  Toolbar,
-  Tooltip,
-  IconButton,
-  Typography,
-  OutlinedInput,
-  InputAdornment
-} from '@material-ui/core';
+import { Box, Toolbar, Typography, OutlinedInput, InputAdornment } from '@material-ui/core';
 
 // ----------------------------------------------------------------------
 
@@ -62,7 +53,7 @@ export default function UserListToolbar({ numSelected, filterName, onFilterName 
         <SearchStyle
           value={filterName}
           onChange={onFilterName}
-          placeholder="Search task..."
+          placeholder="Search build..."
           startAdornment={
             <InputAdornment position="start">
               <Box component={Icon} icon={searchFill} sx={{ color: 'text.disabled' }} />
@@ -70,14 +61,6 @@ export default function UserListToolbar({ numSelected, filterName, onFilterName 
           }
         />
       )}
-
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton>
-            <Icon icon={trash2Fill} />
-          </IconButton>
-        </Tooltip>
-      ) : null}
     </RootStyle>
   );
 }

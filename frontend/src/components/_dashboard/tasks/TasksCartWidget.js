@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 // material
 import { styled } from '@material-ui/core/styles';
 import { Badge, Tooltip } from '@material-ui/core';
@@ -27,12 +28,14 @@ const RootStyle = styled('div')(({ theme }) => ({
 }));
 
 // ----------------------------------------------------------------------
-
-export default function CartWidget() {
+CartWidget.propTypes = {
+  count: PropTypes.number
+};
+export default function CartWidget({ count }) {
   return (
     <Tooltip title="ToDo Tasks" arrow>
       <RootStyle>
-        <Badge showZero badgeContent={0} color="error" max={99}>
+        <Badge showZero badgeContent={count} color="error" max={999}>
           <AssignmentLate />
         </Badge>
       </RootStyle>

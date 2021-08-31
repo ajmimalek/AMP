@@ -3,10 +3,7 @@ import { Box } from '@material-ui/system';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import SwipeableViews from 'react-swipeable-views';
-import StoryList from 'src/components/_dashboard/stories/StoryList';
 import Page from '../components/Page'; //
-import STORIES from '../_mocks_/stories';
-
 // ----------------------------------------------------------------------
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -85,30 +82,14 @@ export default function EcommerceShop() {
             <Tooltip title="My name is Sprint5" placement="top" arrow>
               <Tab label="Sprint Five" {...a11yProps(1)} />
             </Tooltip>
-            <Tooltip title="My name is Sprint6" placement="top" arrow>
-              <Tab label="Sprint Six" {...a11yProps(2)} />
-            </Tooltip>
           </Tabs>
         </Box>
         <SwipeableViews index={value} onChangeIndex={handleChangeIndex}>
-          <TabPanel value={value} index={0}>
-            <StoryList stories={STORIES} />
-          </TabPanel>
-          <TabPanel value={value} index={1}>
-            <StoryList stories={STORIES} />
-          </TabPanel>
-          <TabPanel value={value} index={2}>
-            <StoryList stories={STORIES} />
-          </TabPanel>
-          <TabPanel value={value} index={3}>
-            <StoryList stories={STORIES} />
-          </TabPanel>
-          <TabPanel value={value} index={4}>
-            <StoryList stories={STORIES} />
-          </TabPanel>
-          <TabPanel value={value} index={5}>
-            <StoryList stories={STORIES} />
-          </TabPanel>
+          <TabPanel value={value} index={0} />
+          <TabPanel value={value} index={1} />
+          <TabPanel value={value} index={2} />
+          <TabPanel value={value} index={3} />
+          <TabPanel value={value} index={4} />
         </SwipeableViews>
       </Container>
     </Page>

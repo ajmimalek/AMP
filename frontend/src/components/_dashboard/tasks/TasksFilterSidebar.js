@@ -5,7 +5,6 @@ import closeFill from '@iconify/icons-eva/close-fill';
 import roundClearAll from '@iconify/icons-ic/round-clear-all';
 import roundFilterList from '@iconify/icons-ic/round-filter-list';
 // material
-import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
 import {
   Box,
   Stack,
@@ -19,8 +18,7 @@ import {
   Avatar
 } from '@material-ui/core'; //
 
-import { Bookmark, Face, Timelapse } from '@material-ui/icons';
-import { LocalizationProvider, MobileDateRangePicker } from '@material-ui/lab';
+import { Cancel, CheckCircle, Face } from '@material-ui/icons';
 import users from 'src/_mocks_/user';
 import { styled } from '@material-ui/styles';
 
@@ -54,16 +52,18 @@ export const SORT_BY_OPTIONS = [
 ];
 export const FILTER_STORY_OPTIONS = [
   {
-    value: 'below',
-    label: 'Below $25'
+    icon: <CheckCircle color="success" />,
+    value: 'success',
+    label: 'Successful Builds'
   },
   {
-    value: 'between',
-    label: 'Between $25 - $75'
+    icon: <Cancel color="error" />,
+    value: 'failed',
+    label: 'Failed Builds'
   },
   {
-    value: 'above',
-    label: 'Above $75'
+    value: 'all',
+    label: 'All Builds'
   }
 ];
 
@@ -82,6 +82,15 @@ export default function TasksFilterSidebar({
   formik
 }) {
   const { handleChange } = formik;
+  const filterbuilds = (value) => {
+    if (value === 'success') {
+      console.log('Success');
+    } else if (value === 'failed') {
+      console.log('Failed');
+    } else {
+      console.log('All');
+    }
+  };
   return (
     <>
       <Button
@@ -138,7 +147,7 @@ export default function TasksFilterSidebar({
                 p: 3
               }}
             >
-              <div>
+              {/* <div>
                 <Typography variant="subtitle1" gutterBottom sx={{ textAlign: 'center' }}>
                   <Timelapse sx={{ marginBottom: '-4px' }} /> Period
                 </Typography>
@@ -163,21 +172,26 @@ export default function TasksFilterSidebar({
                     )}
                   />
                 </LocalizationProvider>
-              </div>
+                    </div> */}
 
               <StoriesStyle>
                 <Typography variant="subtitle1" gutterBottom sx={{ textAlign: 'center' }}>
-                  <Bookmark sx={{ marginBottom: '-4px' }} /> Story
+                  Status
                 </Typography>
                 <Autocomplete
                   disablePortal
+                  clearIcon={null}
                   id="combo-box-stories"
                   options={FILTER_STORY_OPTIONS}
+                  onChange={(e, value) => {
+                    handleChange('story');
+                    filterbuilds(value.value);
+                  }}
                   sx={{ width: '100%' }}
-                  renderInput={(params) => <TextField {...params} label="Choose your story..." />}
+                  renderInput={(params) => <TextField {...params} label="Choose a status..." />}
                   renderOption={(props, option) => (
                     <AccountStyle {...props}>
-                      <Avatar src={option.avatarUrl} alt="photoURL" />
+                      {option.icon}
                       <Box sx={{ ml: 1 }}>
                         <Typography variant="body2" sx={{ color: 'text.primary' }}>
                           {option.label}
@@ -198,7 +212,7 @@ export default function TasksFilterSidebar({
                   options={users}
                   getOptionLabel={(option) => option.name}
                   sx={{ width: '100%' }}
-                  renderInput={(params) => <TextField {...params} label="Choose your story..." />}
+                  renderInput={(params) => <TextField {...params} label="Choose a username..." />}
                   renderOption={(props, option) => (
                     <AccountStyle {...props}>
                       <Avatar src={option.avatarUrl} alt="photoURL" />

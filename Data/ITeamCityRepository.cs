@@ -1,4 +1,5 @@
-﻿using AMP.Models;
+﻿using AMP.Dtos;
+using AMP.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,9 @@ namespace AMP.Data
         Changes GetBuildChanges(int id);
         CodeCoverage GetCodeCoverage(int id);
         CodeInspections GetCodeInspections(int id);
+        List<Builds> GetSuccessfulBuilds();
+        List<Builds> GetFailedBuilds();
+        List<Builds> GetBuilds();
+        BuildDashboard GetDashboard();
     }
 }

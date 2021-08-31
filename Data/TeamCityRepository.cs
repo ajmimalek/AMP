@@ -1,4 +1,5 @@
 ﻿using AMP.API_Models;
+using AMP.Dtos;
 using AMP.Models;
 using Newtonsoft.Json;
 using System;
@@ -31,15 +32,15 @@ namespace AMP.Data
             httpClient.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", TOKEN));
         }
 
-        public Build GetBuildById(int id)
+        public Models.Build GetBuildById(int id)
         {
-            Build build;
+            Models.Build build;
             var response = httpClient.GetAsync(BASE_URI + "/builds/" + id.ToString() + "?fields=id,number,status,state,branchName,webUrl,statusText,startDate,finishDate,buildType(name),lastChanges(change(id))").Result;
             if (response.IsSuccessStatusCode)
             {
                 var BuildResponse = response.Content.ReadAsStringAsync().Result;
                 BuildDetails BuildInfos = JsonConvert.DeserializeObject<BuildDetails>(BuildResponse);
-                build = new Build(BuildInfos.id, BuildInfos.number, BuildInfos.status, BuildInfos.state, BuildInfos.branchName, BuildInfos.webUrl, BuildInfos.statusText, BuildInfos.buildType.name, BuildInfos.lastChanges.change[0].id);
+                build = new Models.Build(BuildInfos.id, BuildInfos.number, BuildInfos.status, BuildInfos.state, BuildInfos.branchName, BuildInfos.webUrl, BuildInfos.statusText, BuildInfos.buildType.name, BuildInfos.lastChanges.change[0].id);
                 TimeSpan exec = DateTime.ParseExact(BuildInfos.finishDate, "yyyyMMdd'T'HHmmsszzz", CultureInfo.InvariantCulture) - DateTime.ParseExact(BuildInfos.startDate, "yyyyMMdd'T'HHmmsszzz", CultureInfo.InvariantCulture);
                 build.ExecutionTime = exec.ToString();
                 return build;
@@ -49,7 +50,7 @@ namespace AMP.Data
 
         public Changes GetBuildChanges(int id)
         {
-            Build build = GetBuildById(id);
+            Models.Build build = GetBuildById(id);
             Changes changes;
             Models.Files file;
             var response = httpClient.GetAsync(BASE_URI + "/changes/id:" + build.LastChangeId.ToString() + "?fields=id,username,date,webUrl,comment,files(file(file,changeType))").Result;
@@ -61,7 +62,7 @@ namespace AMP.Data
                 changes.files = new List<Models.Files>();
                 for (int i = 0; i < changesDetails.files.file.Length; i++)
                 {
-                    file = new Models.Files(i,changesDetails.files.file[i].file, changesDetails.files.file[i].changeType);
+                    file = new Models.Files(i, changesDetails.files.file[i].file, changesDetails.files.file[i].changeType);
                     if (changesDetails.files.file[i].changeType.Equals("added"))
                     {
                         changes.AddedFiles++;
@@ -159,6 +160,84 @@ namespace AMP.Data
                 }
             }
             return codeInspections;
+        }
+
+        public List<Builds> GetSuccessfulBuilds()
+        {
+            Builds SuccessfulBuild;
+            List<Builds> SuccessfulBuilds = new List<Builds>();
+            var response = httpClient.GetAsync(BASE_URI + "/builds/?locator=status:SUCCESS&fields=nextHref,build(id,status)").Result;
+            if (response.IsSuccessStatusCode)
+            {
+                var Response = response.Content.ReadAsStringAsync().Result;
+                BuildList buildList = JsonConvert.DeserializeObject<BuildList>(Response);
+                    foreach (var build in buildList.build)
+                    {
+                        SuccessfulBuild = new Builds(build.id, build.status, GetBuildChanges(build.id).UserName);
+                        SuccessfulBuilds.Add(SuccessfulBuild);
+                    }
+
+            }
+            return SuccessfulBuilds;
+        }
+
+        public List<Builds> GetFailedBuilds()
+        {
+            Builds FailedBuild;
+            List<Builds> FailedBuilds = new List<Builds>();
+            var response = httpClient.GetAsync(BASE_URI + "/builds/?locator=status:FAILURE&fields=nextHref,build(id,status)").Result;
+            if (response.IsSuccessStatusCode)
+            {
+                var Response = response.Content.ReadAsStringAsync().Result;
+                BuildList buildList = JsonConvert.DeserializeObject<BuildList>(Response);
+                foreach (var build in buildList.build)
+                {
+                    FailedBuild = new Builds(build.id, build.status, GetBuildChanges(build.id).UserName);
+                    FailedBuilds.Add(FailedBuild);
+                }
+
+            }
+            return FailedBuilds;
+        }
+
+        public List<Builds> GetBuilds()
+        {
+            Builds Build;
+            List<Builds> BuildsList = new List<Builds>();
+            var response = httpClient.GetAsync(BASE_URI + "/builds/?fields=nextHref,build(id,status)").Result;
+            if (response.IsSuccessStatusCode)
+            {
+                var Response = response.Content.ReadAsStringAsync().Result;
+                BuildList buildList = JsonConvert.DeserializeObject<BuildList>(Response);
+                foreach (var build in buildList.build)
+                {
+                    Build = new Builds(build.id, build.status, GetBuildChanges(build.id).UserName);
+
+                    BuildsList.Add(Build);
+                }
+
+            }
+            return BuildsList;
+        }
+
+        public BuildDashboard GetDashboard()
+        {
+            List<Builds> builds = GetBuilds();
+            BuildDashboard dashboard = new BuildDashboard();
+            dashboard.BuildSuccess = 0;
+            dashboard.BuildFailure = 0;
+            foreach (var build in builds)
+            {
+                if (build.status.Equals("SUCCESS"))
+                {
+                    dashboard.BuildSuccess++;
+                }
+                if (build.status.Equals("FAILURE"))
+                {
+                    dashboard.BuildFailure++;
+                }
+            }
+            return dashboard;
         }
     }
 }

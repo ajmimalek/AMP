@@ -21,6 +21,10 @@ namespace AMP.Models
         [JsonIgnore] public Build Build { get; set; }
         [JsonIgnore] public int BuildFK { get; set; }
 
+        public Changes()
+        {
+
+        }
         //Constructor
         public Changes(int id, string userName, string comment)
         {

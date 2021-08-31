@@ -1,10 +1,9 @@
-import { Icon } from '@iconify/react';
-import appleFilled from '@iconify/icons-ant-design/apple-filled';
+import PropTypes from 'prop-types';
 // material
 import { alpha, styled } from '@material-ui/core/styles';
 import { Card, Typography } from '@material-ui/core';
 // utils
-import { fShortenNumber } from '../../../utils/formatNumber';
+import { CheckCircle } from '@material-ui/icons';
 
 // ----------------------------------------------------------------------
 
@@ -12,8 +11,8 @@ const RootStyle = styled(Card)(({ theme }) => ({
   boxShadow: 'none',
   textAlign: 'center',
   padding: theme.spacing(5, 0),
-  color: theme.palette.info.darker,
-  backgroundColor: theme.palette.info.lighter
+  color: theme.palette.success.darker,
+  backgroundColor: theme.palette.success.light
 }));
 
 const IconWrapperStyle = styled('div')(({ theme }) => ({
@@ -25,26 +24,28 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
   height: theme.spacing(8),
   justifyContent: 'center',
   marginBottom: theme.spacing(3),
-  color: theme.palette.info.dark,
-  backgroundImage: `linear-gradient(135deg, ${alpha(theme.palette.info.dark, 0)} 0%, ${alpha(
-    theme.palette.info.dark,
+  color: theme.palette.success.dark,
+  backgroundImage: `linear-gradient(135deg, ${alpha(theme.palette.success.dark, 0)} 0%, ${alpha(
+    theme.palette.success.dark,
     0.24
   )} 100%)`
 }));
 
 // ----------------------------------------------------------------------
 
-const TOTAL = 1352831;
+AppNewUsers.propTypes = {
+  SuccessfulBuilds: PropTypes.number
+};
 
-export default function AppNewUsers() {
+export default function AppNewUsers({ SuccessfulBuilds }) {
   return (
     <RootStyle>
       <IconWrapperStyle>
-        <Icon icon={appleFilled} width={24} height={24} />
+        <CheckCircle width={24} height={24} />
       </IconWrapperStyle>
-      <Typography variant="h3">{fShortenNumber(TOTAL)}</Typography>
+      <Typography variant="h3">{SuccessfulBuilds}</Typography>
       <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
-        New Users
+        Successful Builds
       </Typography>
     </RootStyle>
   );

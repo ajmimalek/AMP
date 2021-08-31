@@ -1,5 +1,6 @@
 import { Navigate, useRoutes } from 'react-router-dom';
 // layouts
+import cookie from 'js-cookie';
 import DashboardLayout from './layouts/dashboard';
 import LogoOnlyLayout from './layouts/LogoOnlyLayout';
 //
@@ -11,6 +12,15 @@ import NotFound from './pages/Page404';
 import Profile from './pages/Profile';
 
 // ----------------------------------------------------------------------
+export const isAuth = () => {
+  if (window !== 'undefined') {
+    const cookieChecked = cookie.get('jwt');
+    if (cookieChecked) {
+      return true;
+    }
+  }
+  return false;
+};
 
 export default function Router() {
   return useRoutes([
@@ -20,7 +30,7 @@ export default function Router() {
       children: [
         { path: '/', element: <Navigate to="/dashboard/app" replace /> },
         { path: 'app', element: <DashboardApp /> },
-        { path: 'tasks', element: <Tasks /> },
+        { path: 'builds', element: <Tasks /> },
         { path: 'sprints', element: <Sprints /> },
         { path: 'profile', element: <Profile /> }
       ]
@@ -32,7 +42,6 @@ export default function Router() {
         { path: 'login', element: <Login /> },
         { path: '404', element: <NotFound /> },
         { path: '/', element: <Navigate to="/login" /> },
-        { path: '/app/dashboard', element: <Navigate to="/login" /> },
         { path: '*', element: <Navigate to="/404" /> }
       ]
     },

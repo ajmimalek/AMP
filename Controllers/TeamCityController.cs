@@ -1,4 +1,5 @@
 ﻿using AMP.Data;
+using AMP.Dtos;
 using AMP.Helpers;
 using AMP.Models;
 using Microsoft.AspNetCore.Http;
@@ -40,6 +41,62 @@ namespace AMP.Controllers
             build.CodeInspections = _repository.GetCodeInspections(id);
             build.Changes = _repository.GetBuildChanges(id);
             return Ok(build);
+        }
+
+        //GET api/teamcity/build/success
+        [HttpGet("build/success")]
+        public ActionResult<List<Builds>> GetSuccessfulBuilds()
+        {
+            var jwt = Request.Cookies["jwt"];
+            var token = _jwtService.Verify(jwt);
+            if (token == null)
+            {
+                return Unauthorized();
+            }
+            var builds = _repository.GetSuccessfulBuilds();
+            return Ok(builds);
+        }
+
+        //GET api/teamcity/build/failed
+        [HttpGet("build/failed")]
+        public ActionResult<List<Builds>> GetFailedBuilds()
+        {
+            var jwt = Request.Cookies["jwt"];
+            var token = _jwtService.Verify(jwt);
+            if (token == null)
+            {
+                return Unauthorized();
+            }
+            var builds = _repository.GetFailedBuilds();
+            return Ok(builds);
+        }
+
+        //GET api/teamcity/build
+        [HttpGet("build")]
+        public ActionResult<List<Builds>> GetBuilds()
+        {
+            var jwt = Request.Cookies["jwt"];
+            var token = _jwtService.Verify(jwt);
+            if (token == null)
+            {
+                return Unauthorized();
+            }
+            var builds = _repository.GetBuilds();
+            return Ok(builds);
+        }
+
+        //GET api/teamcity/build
+        [HttpGet("build/dashboard")]
+        public ActionResult<BuildDashboard> GetBuildsData()
+        {
+            var jwt = Request.Cookies["jwt"];
+            var token = _jwtService.Verify(jwt);
+            if (token == null)
+            {
+                return Unauthorized();
+            }
+            var Data = _repository.GetDashboard();
+            return Ok(Data);
         }
     }
 }

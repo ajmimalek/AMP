@@ -45,7 +45,7 @@ export default function AccountPopover() {
       });
       const content = await res.json();
       console.log(content);
-      setName(content.userName);
+      setName(content.name);
       setRole(content.role);
     })();
   }, []);

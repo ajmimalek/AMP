@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { Icon } from '@iconify/react';
 import { useRef, useState } from 'react';
 import moreVerticalFill from '@iconify/icons-eva/more-vertical-fill';
@@ -102,8 +103,11 @@ const styles = () => ({
   }
 });
 
+UserMoreMenu.propTypes = {
+  id: PropTypes.number
+};
 const useStyles = makeStyles(styles);
-export default function UserMoreMenu() {
+export default function UserMoreMenu({ id }) {
   const classes = useStyles();
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -154,8 +158,7 @@ export default function UserMoreMenu() {
   const handleDialogOpen = () => {
     setOpen(true);
     (async () => {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/TeamCity/build/30819`, {
-        // id must be passed through task table
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/TeamCity/build/${id}`, {
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include'
       });

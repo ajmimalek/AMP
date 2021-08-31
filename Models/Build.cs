@@ -23,7 +23,7 @@ namespace AMP.Models
         //FK : CodeInspections
         public CodeInspections CodeInspections { get; set; }
         //FK : Changes
-        public Changes Changes { get; set; }
+        public Changes Changes  { get; set; }
         
         public Build(int id, string number, string status, string state, string branchName, string webURL, string description, string name, int lastChangeId)
         {
@@ -40,6 +40,12 @@ namespace AMP.Models
 
         public Build()
         {
+        }
+
+        public Build(int id, string status)
+        {
+            Id = id;
+            Status = status;
         }
     }
 }

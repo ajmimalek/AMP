@@ -9,6 +9,10 @@ const GlobalStyles = withStyles((theme) => ({
       padding: 0,
       boxSizing: 'border-box'
     },
+    '* ::selection': {
+      backgroundColor: '#B71928',
+      color: 'white'
+    },
     html: {
       width: '100%',
       height: '100%',

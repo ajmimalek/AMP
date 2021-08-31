@@ -1,10 +1,9 @@
-import { Icon } from '@iconify/react';
-import androidFilled from '@iconify/icons-ant-design/android-filled';
+import PropTypes from 'prop-types';
 // material
 import { alpha, styled } from '@material-ui/core/styles';
 import { Card, Typography } from '@material-ui/core';
 // utils
-import { fShortenNumber } from '../../../utils/formatNumber';
+import { Cancel } from '@material-ui/icons';
 
 // ----------------------------------------------------------------------
 
@@ -34,17 +33,19 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-const TOTAL = 714000;
+AppWeeklySales.propTypes = {
+  FailedBuilds: PropTypes.number
+};
 
-export default function AppWeeklySales() {
+export default function AppWeeklySales({ FailedBuilds }) {
   return (
     <RootStyle>
       <IconWrapperStyle>
-        <Icon icon={androidFilled} width={24} height={24} />
+        <Cancel width={24} height={24} />
       </IconWrapperStyle>
-      <Typography variant="h3">{fShortenNumber(TOTAL)}</Typography>
+      <Typography variant="h3">{FailedBuilds}</Typography>
       <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
-        Weekly Sales
+        Failed Builds
       </Typography>
     </RootStyle>
   );

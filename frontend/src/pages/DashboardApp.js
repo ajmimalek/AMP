@@ -1,25 +1,32 @@
 // material
 import { Box, Grid, Container, Typography } from '@material-ui/core';
+import { useEffect, useState } from 'react';
 // components
 import Page from '../components/Page';
 import {
-  AppTasks,
   AppNewUsers,
-  AppBugReports,
   AppItemOrders,
-  AppNewsUpdate,
   AppWeeklySales,
-  AppOrderTimeline,
-  AppCurrentVisits,
-  AppWebsiteVisits,
-  AppTrafficBySite,
-  AppCurrentSubject,
-  AppConversionRates
+  AppCurrentVisits
 } from '../components/_dashboard/app';
 
 // ----------------------------------------------------------------------
 
 export default function DashboardApp() {
+  const [failed, setFailed] = useState(0);
+  const [success, setSuccess] = useState(0);
+  useEffect(() => {
+    (async () => {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/TeamCity/build/dashboard`, {
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include'
+      });
+      const content = await res.json();
+      console.log(content);
+      setFailed(content.buildFailure);
+      setSuccess(content.buildSuccess);
+    })();
+  }, []);
   return (
     <Page title="Dashboard | Linedata-AMP">
       <Container maxWidth="xl">
@@ -27,49 +34,18 @@ export default function DashboardApp() {
           <Typography variant="h4">Hi, Welcome back</Typography>
         </Box>
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={6} md={3}>
-            <AppWeeklySales />
+          <Grid item xs={12} sm={6} md={4}>
+            <AppWeeklySales FailedBuilds={failed} />
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <AppNewUsers />
+          <Grid item xs={12} sm={6} md={4}>
+            <AppNewUsers SuccessfulBuilds={success} />
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <AppItemOrders />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <AppBugReports />
+          <Grid item xs={12} sm={6} md={4}>
+            <AppItemOrders TOTAL={failed + success} />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={8}>
-            <AppWebsiteVisits />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={4}>
-            <AppCurrentVisits />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={8}>
-            <AppConversionRates />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={4}>
-            <AppCurrentSubject />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={8}>
-            <AppNewsUpdate />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={4}>
-            <AppOrderTimeline />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={4}>
-            <AppTrafficBySite />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={8}>
-            <AppTasks />
+          <Grid item xs={12} md={12} lg={12}>
+            <AppCurrentVisits CHART_DATA={[success, failed]} />
           </Grid>
         </Grid>
       </Container>
